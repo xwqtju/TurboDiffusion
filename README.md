@@ -66,6 +66,8 @@ backend matrix, see [docs/B200_DEPLOYMENT.md](docs/B200_DEPLOYMENT.md).
 
 **Base environment**: `python>=3.9`, `torch>=2.7.0`. `torch==2.8.0` is recommended, as higher versions may cause OOM.
 
+The following stack has been validated on Ubuntu 24.04 with RTX 5090 (SM120): Python 3.12, PyTorch 2.8.0+cu128, CUDA 12.8, Triton 3.4, and FlashAttention 2.8.1. FlashAttention 2.8.1 is also within the version range supported by the training stack described below.
+
 Install TurboDiffusion by pip:
 
 ```bash
@@ -88,6 +90,13 @@ To enable SageSLA, a fast SLA forward pass based on SageAttention, install [Spar
 
 ```bash
 pip install git+https://github.com/thu-ml/SpargeAttn.git --no-build-isolation
+```
+
+When building FlashAttention locally for an RTX 5090, restricting the build to SM120 avoids compiling kernels for unused GPU architectures:
+
+```bash
+FLASH_ATTENTION_FORCE_BUILD=TRUE TORCH_CUDA_ARCH_LIST=12.0a MAX_JOBS=8 \
+    pip install --force-reinstall --no-build-isolation --no-cache-dir flash-attn==2.8.1
 ```
 
 
@@ -145,6 +154,7 @@ For GPUs with more than 40GB of GPU memory, **e.g., H100, please use the unquant
     # --save_path           Output file path including extension (default: output/generated_video.mp4)
     # --attention_type      Attention module to use: original, sla or sagesla (default: sagesla)
     # --sla_topk            Top-k ratio for SLA/SageSLA attention (default: 0.1), we recommend using 0.15 for better video quality
+    # --sla_q_2to4          Simulate 2:4 activation sparsity on Q for SLA/SageSLA (disabled by default)
     # --quant_linear        Enable quantization for linear layers, pass this if using a quantized checkpoint
     # --default_norm        Use the original LayerNorm and RMSNorm of Wan models
 
@@ -184,6 +194,7 @@ For GPUs with more than 40GB of GPU memory, **e.g., H100, please use the unquant
     # --save_path               Output file path including extension (default: output/generated_video.mp4)
     # --attention_type          Attention module to use: original, sla or sagesla (default: sagesla)
     # --sla_topk                Top-k ratio for SLA/SageSLA attention (default: 0.1), we recommend using 0.15 for better video quality
+    # --sla_q_2to4              Simulate 2:4 activation sparsity on Q for SLA/SageSLA (disabled by default)
     # --quant_linear            Enable quantization for linear layers, pass this if using a quantized checkpoint
     # --default_norm            Use the original LayerNorm and RMSNorm of Wan models
 
@@ -202,6 +213,56 @@ For GPUs with more than 40GB of GPU memory, **e.g., H100, please use the unquant
         --sla_topk 0.1 \
         --ode
     ```
+
+#### Two-GPU unquantized Wan2.2-A14B inference
+
+For two 32 GB GPUs, use the distributed inference entry point. It combines
+FSDP2 block-wise parameter sharding with context parallelism (sequence
+sharding and attention all-to-all), allowing the unquantized A14B checkpoints
+to generate 1280x720 videos with 81 frames. Plain DDP or assigning the high-
+and low-noise models to separate GPUs does not combine GPU memory.
+
+```bash
+export PYTHONPATH=turbodiffusion
+export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
+
+python -m torch.distributed.run --standalone --nproc_per_node=2 \
+    turbodiffusion/inference/wan2.2_i2v_dist_infer.py \
+    --model Wan2.2-A14B \
+    --low_noise_model_path checkpoints/TurboWan2.2-I2V-A14B-low-720P.pth \
+    --high_noise_model_path checkpoints/TurboWan2.2-I2V-A14B-high-720P.pth \
+    --vae_path checkpoints/Wan2.1_VAE.pth \
+    --text_encoder_path checkpoints/models_t5_umt5-xxl-enc-bf16.pth \
+    --resolution 720p \
+    --num_frames 81 \
+    --num_steps 4 \
+    --image_path assets/i2v_inputs/i2v_input_0.jpg \
+    --prompt "Your prompt" \
+    --attention_type original \
+    --save_path output/wan22_14b_dist_720p81.mp4
+```
+
+Both ranks participate in DiT sampling. Only rank 0 decodes and writes the
+final video. The current distributed path requires exactly two local GPUs.
+
+### SLA Q activation 2:4 simulation
+
+Pass `--sla_q_2to4` with `--attention_type sla` or `--attention_type sagesla` to
+simulate Rubin-style structured activation sparsity on attention queries. After
+RoPE and immediately before the SLA QK computation, each contiguous group of
+four values along `head_dim` keeps the two largest-magnitude values and zeros
+the other two. The option changes numerical results but uses dense PyTorch
+operations, so it does not by itself provide sparse-kernel acceleration.
+
+```bash
+python turbodiffusion/inference/wan2.2_i2v_infer.py \
+    ... \
+    --attention_type sagesla \
+    --sla_topk 0.1 \
+    --sla_q_2to4
+```
+
+For SLA training, set `model.config.sla_q_2to4=true` in the Hydra overrides.
 
 Interactive inference via the terminal is available at `turbodiffusion/serve/`. This allows multi-turn video generation without reloading the model.
 
@@ -521,9 +582,31 @@ In this repo, we provide training code based on Wan2.1 and its synthetic data. T
 For rCM/SLA training, additionally run:
 
 ```bash
-pip install megatron-core hydra-core wandb webdataset
-pip install --no-build-isolation transformer_engine[pytorch]
+pip install megatron-core==0.18.2 hydra-core wandb webdataset absl-py
+pip install --no-build-isolation 'transformer_engine[pytorch]==2.8.0'
 ```
+
+The versions above are validated with the recommended PyTorch 2.8/CUDA 12.8 environment. Transformer Engine releases newer than 2.8 may use PyTorch internal headers that are unavailable in PyTorch 2.8.
+
+If Transformer Engine falls back to a source build and cannot find `nccl.h` or `cudnn.h`, expose the headers and libraries bundled with the PyTorch CUDA packages before retrying:
+
+```bash
+SITE_PACKAGES=$(python -c 'import site; print(site.getsitepackages()[0])')
+export CPATH="${SITE_PACKAGES}/nvidia/nccl/include:${SITE_PACKAGES}/nvidia/cudnn/include${CPATH:+:${CPATH}}"
+export LIBRARY_PATH="${SITE_PACKAGES}/nvidia/nccl/lib:${SITE_PACKAGES}/nvidia/cudnn/lib${LIBRARY_PATH:+:${LIBRARY_PATH}}"
+export LD_LIBRARY_PATH="${SITE_PACKAGES}/nvidia/nccl/lib:${SITE_PACKAGES}/nvidia/cudnn/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
+MAX_JOBS=8 pip install --no-build-isolation 'transformer_engine[pytorch]==2.8.0'
+```
+
+Megatron-Core 0.18 may print a warning that Transformer Engine or Apex is unavailable when Transformer Engine 2.8 does not provide the newer `multi_tensor_scale_tensor` helper. Megatron-Core falls back to its local gradient-clipping implementation; verify the actual Transformer Engine integration with:
+
+```bash
+python -c 'from megatron.core.extensions.transformer_engine import HAVE_TE; assert HAVE_TE'
+```
+
+The published `transformer_engine_cu12==2.8.0` wheel may also make `pip check` report that it is unsupported on Python 3.12 because its internal wheel tag is `cp310`. This is a package-metadata issue; use the import check above to validate the locally built CPython extension and run a distributed smoke test before training.
+
+The current TurboDiffusion training implementation directly supports FSDP2 and Ulysses context parallelism. Megatron-Core can initialize tensor-, pipeline-, and context-parallel process groups, but using TP or PP to partition the TurboDiffusion model itself additionally requires model sharding and pipeline-stage configuration.
 
 #### Checkpoints Downloading
 Download the Wan2.1 pretrained checkpoints in `.pth` format and VAE/text encoder to `assets/checkpoints`:
@@ -553,7 +636,7 @@ git clone https://huggingface.co/datasets/worstcoder/Wan_datasets assets/dataset
 #### Start Training
 We implement white-box SLA training by aligning the predictions of the SLA-enabled model with those of the full-attention pretrained model. Unlike black-box training in the original paper, which tunes the pretrained model using diffusion loss, white-box training mitigates distribution shift and is less sensitive to the training data.
 
-Single-node training example:
+Single-node training example (set `NUM_GPUS=2` for a two-GPU workstation):
 
 ```bash
 WORKDIR="/path/to/TurboDiffusion"
@@ -571,8 +654,9 @@ export WANDB_ENTITY=xxx
 
 registry=registry_sla
 experiment=wan2pt1_1pt3B_res480p_t2v_SLA
+NUM_GPUS=${NUM_GPUS:-8}
 
-torchrun --nproc_per_node=8 \
+torchrun --standalone --nproc_per_node=${NUM_GPUS} \
     -m scripts.train --config=turbodiffusion/rcm/configs/${registry}.py -- experiment=${experiment} \
         model.config.teacher_ckpt=${CHECKPOINT_ROOT}/Wan2.1-T2V-1.3B.dcp \
         model.config.tokenizer.vae_pth=${CHECKPOINT_ROOT}/Wan2.1_VAE.pth \

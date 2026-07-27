@@ -57,6 +57,7 @@ from rcm.samplers.euler import FlowEulerSampler
 from rcm.samplers.unipc import FlowUniPCMultistepSampler
 from rcm.networks.wan2pt1 import WanSelfAttention
 from SLA import SparseLinearAttention
+from rcm.utils.structured_sparsity import enable_q_activation_2_to_4
 
 torch._dynamo.config.suppress_errors = True
 
@@ -64,14 +65,22 @@ IS_PREPROCESSED_KEY = "is_preprocessed"
 IS_PROCESSED_KEY = "is_processed"
 
 
-def replace_attention_with_sla(model: torch.nn.Module, sla_topk: float, linear_q_2to4: bool = False):
+def replace_attention_with_sla(
+    model: torch.nn.Module,
+    sla_topk: float,
+    linear_q_2to4: bool = False,
+    sla_q_2to4: bool = False,
+):
     for module in model.modules():
         if type(module) is WanSelfAttention:
-            module.attn_op.local_attn = SparseLinearAttention(
+            local_attn = SparseLinearAttention(
                 head_dim=module.head_dim,
                 topk=sla_topk,
                 linear_q_2to4=linear_q_2to4,
             )
+            if sla_q_2to4:
+                enable_q_activation_2_to_4(local_attn)
+            module.attn_op.local_attn = local_attn
 
 
 @dataclass
@@ -117,6 +126,7 @@ class T2VConfig_SLA:
 
     sla_topk: float = 0.1
     linear_q_2to4: bool = False
+    sla_q_2to4: bool = False
 
 
 class T2VModel_SLA(ImaginaireModel):
@@ -178,7 +188,12 @@ class T2VModel_SLA(ImaginaireModel):
                 net.init_weights()
             if replace_sla:
                 log.info(f"Replacing attention with SLA")
-                replace_attention_with_sla(net, self.config.sla_topk, self.config.linear_q_2to4)
+                replace_attention_with_sla(
+                    net,
+                    self.config.sla_topk,
+                    self.config.linear_q_2to4,
+                    self.config.sla_q_2to4,
+                )
 
             if self.fsdp_device_mesh:
                 mp_policy = MixedPrecisionPolicy(reduce_dtype=torch.float32)

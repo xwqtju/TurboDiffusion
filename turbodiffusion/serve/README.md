@@ -56,6 +56,7 @@ PYTHONPATH=turbodiffusion python turbodiffusion/inference/wan2.2_i2v_infer.py --
 | `--attention_type` | `sagesla` (default), `sla`, or `original` |
 | `--sla_topk` | Top-k ratio for SLA attention. Default: `0.1` |
 | `--linear_q_2to4` | Simulate 2:4 activation sparsity on Q in the SLA/SageSLA linear-attention branch |
+| `--sla_q_2to4` | Simulate Q activation 2:4 sparsity for SLA/SageSLA. Disabled by default |
 | `--quant_linear` | Enable quantized linear layers |
 | `--default_norm` | Use default (non-optimized) normalization |
 
