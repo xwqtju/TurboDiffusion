@@ -50,6 +50,8 @@ def parse_args() -> argparse.Namespace:
                         default="sagesla", help="Attention mechanism type")
     parser.add_argument("--sla_topk", type=float, default=0.1,
                         help="Top-k ratio for SLA/SageSLA attention")
+    parser.add_argument("--sla_q_2to4", action="store_true",
+                        help="Simulate 2:4 activation sparsity on SLA/SageSLA queries")
     parser.add_argument("--quant_linear", action="store_true",
                         help="Use quantized linear layers")
     parser.add_argument("--default_norm", action="store_true",

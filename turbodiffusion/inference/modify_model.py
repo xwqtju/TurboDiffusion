@@ -35,21 +35,26 @@ from SLA import (
     SparseLinearAttention as SLA,
     SageSparseLinearAttention as SageSLA
 )
+from rcm.utils.structured_sparsity import enable_q_activation_2_to_4
 
 
 def replace_attention(
     model: torch.nn.Module,
     attention_type: str,
     sla_topk: float,
+    sla_q_2to4: bool = False,
 ) -> torch.nn.Module:
     assert attention_type in ["sla", "sagesla"], "Invalid attention type."
     
     for module in model.modules():
         if type(module) is WanSelfAttention2pt1 or type(module) is WanSelfAttention2pt2:
             if attention_type == "sla":
-                module.attn_op.local_attn = SLA(head_dim=module.dim // module.num_heads, topk=sla_topk, BLKQ=128, BLKK=64)
+                local_attn = SLA(head_dim=module.dim // module.num_heads, topk=sla_topk, BLKQ=128, BLKK=64)
             elif attention_type == "sagesla":
-                module.attn_op.local_attn = SageSLA(head_dim=module.dim // module.num_heads, topk=sla_topk)
+                local_attn = SageSLA(head_dim=module.dim // module.num_heads, topk=sla_topk)
+            if sla_q_2to4:
+                enable_q_activation_2_to_4(local_attn)
+            module.attn_op.local_attn = local_attn
     return model
 
 
@@ -127,16 +132,27 @@ def select_model(model_name: str) -> torch.nn.Module:
         raise ValueError(f"Unknown model name: {model_name}")
 
 
-def create_model(dit_path: str, args: argparse.Namespace) -> torch.nn.Module:
+def create_model(dit_path: str, args: argparse.Namespace, target_device: str | torch.device = "cuda") -> torch.nn.Module:
     with torch.device("meta"):
         net = select_model(args.model)
 
     state_dict = load_state_dict(dit_path)
+    if args.attention_type == "original":
+        state_dict = {
+            key: value
+            for key, value in state_dict.items()
+            if ".attn_op.local_attn." not in key
+        }
     if args.attention_type in ['sla', 'sagesla']:
-        net = replace_attention(net, attention_type=args.attention_type, sla_topk=args.sla_topk)
+        net = replace_attention(
+            net,
+            attention_type=args.attention_type,
+            sla_topk=args.sla_topk,
+            sla_q_2to4=getattr(args, "sla_q_2to4", False),
+        )
     replace_linear_norm(net, replace_linear=args.quant_linear, replace_norm=not args.default_norm, quantize=False)
     net.load_state_dict(state_dict, assign=True)
-    net = net.to(tensor_kwargs["device"]).eval()
+    net = net.to(target_device).eval()
     del state_dict
     return net
 
@@ -148,6 +164,7 @@ def parse_arguments() -> argparse.Namespace:
     parser.add_argument("--output_path", type=str, default="", help="Custom path to save the modified model checkpoint")
     parser.add_argument("--attention_type", choices=["sla", "sagesla", "original"], default="original", help="Type of attention mechanism to use")
     parser.add_argument("--sla_topk", type=float, default=0.2, help="Top-k ratio for SLA/SageSLA attention")
+    parser.add_argument("--sla_q_2to4", action="store_true", help="Simulate 2:4 activation sparsity on SLA/SageSLA queries")
     parser.add_argument("--quant_linear", action="store_true", help="Whether to replace Linear layers with quantized versions")
     parser.add_argument("--default_norm", action="store_true", help="Whether to replace LayerNorm/RMSNorm layers with faster versions")
     return parser.parse_args()
@@ -174,7 +191,12 @@ if __name__ == "__main__":
         state_dict_dit_compatible[new_key] = v
 
     if args.attention_type in ['sla', 'sagesla']:
-        net = replace_attention(net, attention_type=args.attention_type, sla_topk=args.sla_topk)
+        net = replace_attention(
+            net,
+            attention_type=args.attention_type,
+            sla_topk=args.sla_topk,
+            sla_q_2to4=args.sla_q_2to4,
+        )
     net.load_state_dict(state_dict_dit_compatible, strict=False, assign=True)
     net = net.to(tensor_kwargs["device"]).eval()
     del state_dict, state_dict_dit_compatible

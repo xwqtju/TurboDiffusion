@@ -55,6 +55,7 @@ PYTHONPATH=turbodiffusion python turbodiffusion/inference/wan2.2_i2v_infer.py --
 | `--aspect_ratio` | Aspect ratio. Default: `16:9` |
 | `--attention_type` | `sagesla` (default), `sla`, or `original` |
 | `--sla_topk` | Top-k ratio for SLA attention. Default: `0.1` |
+| `--sla_q_2to4` | Simulate Q activation 2:4 sparsity for SLA/SageSLA. Disabled by default |
 | `--quant_linear` | Enable quantized linear layers |
 | `--default_norm` | Use default (non-optimized) normalization |
 
