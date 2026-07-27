@@ -103,6 +103,10 @@ FLASH_ATTENTION_FORCE_BUILD=TRUE TORCH_CUDA_ARCH_LIST=12.0a MAX_JOBS=8 \
 ## Inference
 For GPUs with more than 40GB of GPU memory, **e.g., H100, please use the unquantized checkpoints (without `-quant`) and remove `--quant_linear` from the command. For RTX 5090, RTX 4090, or similar GPUs, please use the quantized checkpoints (with `-quant`) and add `--quant_linear` in the command.)**
 
+For a reproducible Original / SLA / SLA + Q 2:4 quality comparison on B200,
+including VBench installation and every evaluation-checkpoint download command,
+see [the B200 VBench evaluation guide](docs/VBENCH_B200_GUIDE.md).
+
 1.  Download the VAE (**applicable for both Wan2.1 and Wan2.2**) and umT5 text encoder checkpoints:
 
     ```bash
