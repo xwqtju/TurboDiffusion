@@ -19,7 +19,16 @@ from imaginaire.lazy_config import LazyCall as L
 from imaginaire.lazy_config import LazyDict
 
 from rcm.networks.wan2pt1 import WanModel
-from rcm.networks.wan2pt1_jvp import WanModel_JVP
+
+try:
+    from rcm.networks.wan2pt1_jvp import WanModel_JVP
+except ModuleNotFoundError as exc:
+    if not (exc.name or "").startswith("flash_attn"):
+        raise
+    # SLA training and inference do not use the JVP networks. Keeping their
+    # registration optional avoids making flash-attn a hard dependency for the
+    # B200 SLA environment.
+    WanModel_JVP = None
 
 wan2pt1_1pt3B_net_args = dict(
     dim=1536,
@@ -49,17 +58,18 @@ WAN2PT1_1PT3B_T2V: LazyDict = L(WanModel)(**wan2pt1_1pt3B_net_args, model_type="
 
 WAN2PT1_14B_T2V: LazyDict = L(WanModel)(**wan2pt1_14B_net_args, model_type="t2v")
 
-WAN2PT1_1PT3B_T2V_JVP: LazyDict = L(WanModel_JVP)(**wan2pt1_1pt3B_net_args, model_type="t2v")
-
-WAN2PT1_14B_T2V_JVP: LazyDict = L(WanModel_JVP)(**wan2pt1_14B_net_args, model_type="t2v")
+if WanModel_JVP is not None:
+    WAN2PT1_1PT3B_T2V_JVP: LazyDict = L(WanModel_JVP)(**wan2pt1_1pt3B_net_args, model_type="t2v")
+    WAN2PT1_14B_T2V_JVP: LazyDict = L(WanModel_JVP)(**wan2pt1_14B_net_args, model_type="t2v")
 
 
 def register_net():
     cs = ConfigStore.instance()
     cs.store(group="net", package="model.config.net", name="wan2pt1_1pt3B_t2v", node=WAN2PT1_1PT3B_T2V)
     cs.store(group="net", package="model.config.net", name="wan2pt1_14B_t2v", node=WAN2PT1_14B_T2V)
-    cs.store(group="net", package="model.config.net", name="wan2pt1_1pt3B_t2v_jvp", node=WAN2PT1_1PT3B_T2V_JVP)
-    cs.store(group="net", package="model.config.net", name="wan2pt1_14B_t2v_jvp", node=WAN2PT1_14B_T2V_JVP)
+    if WanModel_JVP is not None:
+        cs.store(group="net", package="model.config.net", name="wan2pt1_1pt3B_t2v_jvp", node=WAN2PT1_1PT3B_T2V_JVP)
+        cs.store(group="net", package="model.config.net", name="wan2pt1_14B_t2v_jvp", node=WAN2PT1_14B_T2V_JVP)
 
 
 def register_net_fake_score():

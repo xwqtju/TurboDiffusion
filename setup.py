@@ -13,6 +13,7 @@ Citation (please cite if you use this code):
 }
 """
 
+import os
 from pathlib import Path
 from setuptools import setup, find_packages
 from torch.utils.cpp_extension import BuildExtension, CUDAExtension
@@ -40,13 +41,43 @@ nvcc_flags = [
     "-fPIC"
 ]
 
-cc_flag = [
-    "-gencode", "arch=compute_120a,code=sm_120a", 
-    "-gencode", "arch=compute_100,code=sm_100",
-    "-gencode", "arch=compute_90,code=sm_90",
-    "-gencode", "arch=compute_89,code=sm_89",
-    "-gencode", "arch=compute_80,code=sm_80"
-]
+_SUPPORTED_CUDA_ARCHS = {
+    "80": ("compute_80", "sm_80"),
+    "89": ("compute_89", "sm_89"),
+    "90": ("compute_90", "sm_90"),
+    "100": ("compute_100", "sm_100"),
+    "120a": ("compute_120a", "sm_120a"),
+}
+
+
+def get_cuda_arch_flags():
+    """Return explicit CUDA targets, optionally narrowed for deployment builds.
+
+    TURBODIFFUSION_CUDA_ARCHS accepts a comma/semicolon/space separated list,
+    for example ``100`` for an NVIDIA B200-only build. Keeping the historical
+    multi-architecture default preserves the behavior of release builds.
+    """
+
+    requested = os.environ.get("TURBODIFFUSION_CUDA_ARCHS")
+    archs = ["120a", "100", "90", "89", "80"]
+    if requested:
+        archs = requested.replace(",", " ").replace(";", " ").split()
+        unknown = sorted(set(archs) - _SUPPORTED_CUDA_ARCHS.keys())
+        if unknown:
+            supported = ", ".join(_SUPPORTED_CUDA_ARCHS)
+            raise RuntimeError(
+                f"Unsupported TURBODIFFUSION_CUDA_ARCHS value(s): {unknown}. "
+                f"Supported values: {supported}."
+            )
+
+    flags = []
+    for arch in archs:
+        compute, code = _SUPPORTED_CUDA_ARCHS[arch]
+        flags.extend(["-gencode", f"arch={compute},code={code}"])
+    return flags
+
+
+cc_flag = get_cuda_arch_flags()
 
 ext_modules = [
     CUDAExtension(

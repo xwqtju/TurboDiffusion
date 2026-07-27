@@ -16,13 +16,23 @@
 from hydra.core.config_store import ConfigStore
 
 from imaginaire.lazy_config import LazyCall as L
-from rcm.models.t2v_model_distill_rcm import T2VDistillConfig_rCM, T2VDistillModel_rCM
 from rcm.models.t2v_model_sla import T2VConfig_SLA, T2VModel_SLA
 
-FSDP_CONFIG_T2V_DISTILL_RCM = dict(
-    trainer=dict(distributed_parallelism="fsdp"),
-    model=L(T2VDistillModel_rCM)(config=T2VDistillConfig_rCM(fsdp_shard_size=8), _recursive_=False),
-)
+try:
+    from rcm.models.t2v_model_distill_rcm import T2VDistillConfig_rCM, T2VDistillModel_rCM
+except ModuleNotFoundError as exc:
+    if not (exc.name or "").startswith("flash_attn"):
+        raise
+    # rCM distillation needs the flash-attn-backed JVP stack; SLA training does
+    # not. Register it only when those optional dependencies are available.
+    T2VDistillConfig_rCM = None
+    T2VDistillModel_rCM = None
+
+if T2VDistillModel_rCM is not None:
+    FSDP_CONFIG_T2V_DISTILL_RCM = dict(
+        trainer=dict(distributed_parallelism="fsdp"),
+        model=L(T2VDistillModel_rCM)(config=T2VDistillConfig_rCM(fsdp_shard_size=8), _recursive_=False),
+    )
 
 FSDP_CONFIG_T2V_SLA = dict(
     trainer=dict(distributed_parallelism="fsdp"),
@@ -32,5 +42,6 @@ FSDP_CONFIG_T2V_SLA = dict(
 
 def register_model():
     cs = ConfigStore.instance()
-    cs.store(group="model", package="_global_", name="fsdp_t2v_distill_rcm", node=FSDP_CONFIG_T2V_DISTILL_RCM)
+    if T2VDistillModel_rCM is not None:
+        cs.store(group="model", package="_global_", name="fsdp_t2v_distill_rcm", node=FSDP_CONFIG_T2V_DISTILL_RCM)
     cs.store(group="model", package="_global_", name="fsdp_t2v_sla", node=FSDP_CONFIG_T2V_SLA)

@@ -60,6 +60,10 @@ TurboT2AV uses an isolated Pixi environment and does not modify the main TurboDi
 
 ## Installation
 
+For a reproducible NVIDIA B200 (SM100) deployment, including offline
+wheelhouse creation, environment verification, and the supported attention
+backend matrix, see [docs/B200_DEPLOYMENT.md](docs/B200_DEPLOYMENT.md).
+
 **Base environment**: `python>=3.9`, `torch>=2.7.0`. `torch==2.8.0` is recommended, as higher versions may cause OOM.
 
 Install TurboDiffusion by pip:

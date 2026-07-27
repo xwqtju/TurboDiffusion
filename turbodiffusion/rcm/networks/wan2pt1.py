@@ -27,7 +27,6 @@ try:
     from flash_attn.layers.rotary import apply_rotary_emb as flash_apply_rotary_emb
 except ImportError:
     flash_apply_rotary_emb = None
-    print("flash_attn is not installed.")
 
 from torch.distributed import ProcessGroup, get_process_group_ranks
 from torch.distributed._composable.fsdp import fully_shard
@@ -172,8 +171,18 @@ def rope_apply(x, freqs):
     cos = torch.cos(freqs).to(torch.float32)
     sin = torch.sin(freqs).to(torch.float32)
 
-    # Apply the rotation
-    rotated = flash_apply_rotary_emb(x.to(torch.float32), cos, sin, interleaved=True, inplace=False)
+    # FlashAttention is an optional optimization on B200. The native PyTorch
+    # path keeps source/offline deployments functional when no compatible
+    # flash-attn wheel is available.
+    x_float = x.to(torch.float32)
+    if flash_apply_rotary_emb is not None:
+        rotated = flash_apply_rotary_emb(x_float, cos, sin, interleaved=True, inplace=False)
+    else:
+        cos = repeat(cos, "s d -> s 1 (d two)", two=2)
+        sin = repeat(sin, "s d -> s 1 (d two)", two=2)
+        x1, x2 = x_float[..., ::2], x_float[..., 1::2]
+        rotated_half = rearrange(torch.stack((-x2, x1), dim=-1), "... d two -> ... (d two)")
+        rotated = x_float * cos + rotated_half * sin
 
     return rotated.to(x.dtype)
 
