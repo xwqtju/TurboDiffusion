@@ -16,6 +16,7 @@ export PYTHONPATH=turbodiffusion
 # --save_path           Output file path including extension (default: output/generated_video.mp4)
 # --attention_type      Attention module to use: original, sla or sagesla (default: sagesla)
 # --sla_topk            Top-k ratio for SLA/SageSLA attention (default: 0.1), we recommend using 0.15 for better video quality
+# --linear_q_2to4       Simulate 2:4 activation sparsity on Q in the SLA/SageSLA linear-attention branch
 # --quant_linear        Enable quantization for linear layers, pass this if using a quantized checkpoint
 # --default_norm        Use the original LayerNorm and RMSNorm of Wan models
 

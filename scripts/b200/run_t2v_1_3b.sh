@@ -20,6 +20,11 @@ fi
 source "${VENV_PATH}/activate-turbodiffusion.sh"
 cd "$PROJECT_ROOT"
 
+LINEAR_Q_2TO4_ARGS=()
+if [[ "${LINEAR_Q_2TO4:-0}" == "1" ]]; then
+    LINEAR_Q_2TO4_ARGS+=(--linear_q_2to4)
+fi
+
 python turbodiffusion/inference/wan2.1_t2v_infer.py \
     --model Wan2.1-1.3B \
     --dit_path "$DIT_PATH" \
@@ -34,4 +39,5 @@ python turbodiffusion/inference/wan2.1_t2v_infer.py \
     --seed "${SEED:-0}" \
     --attention_type "${ATTENTION_TYPE:-sla}" \
     --sla_topk "${SLA_TOPK:-0.1}" \
+    "${LINEAR_Q_2TO4_ARGS[@]}" \
     --save_path "${SAVE_PATH:-output/b200_t2v_1_3b.mp4}"

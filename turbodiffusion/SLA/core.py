@@ -35,8 +35,38 @@ from .kernel import _attention
 from .utils import get_block_map, get_cuda_arch
 
 
+def apply_2_to_4_sparsity(x):
+    """Simulate activation 2:4 sparsity on the last dimension."""
+    dense_dim = x.shape[-1]
+    sparse_dim = dense_dim // 4 * 4
+    if sparse_dim == 0:
+        return x
+
+    x_sparse_part = x[..., :sparse_dim]
+    x_tail = x[..., sparse_dim:]
+    grouped = x_sparse_part.reshape(*x_sparse_part.shape[:-1], -1, 4)
+    keep_idx = grouped.abs().topk(k=2, dim=-1).indices
+    keep_mask = torch.zeros_like(grouped, dtype=torch.bool)
+    keep_mask.scatter_(-1, keep_idx, True)
+    x_sparse_part = grouped.masked_fill(~keep_mask, 0).reshape_as(x_sparse_part)
+
+    if x_tail.numel() == 0:
+        return x_sparse_part
+    return torch.cat((x_sparse_part, x_tail), dim=-1)
+
+
 class SparseLinearAttention(nn.Module):
-    def __init__(self, head_dim, topk, feature_map='softmax', BLKQ=64, BLKK=64, use_bf16=True, tie_feature_map_qk=True):
+    def __init__(
+        self,
+        head_dim,
+        topk,
+        feature_map='softmax',
+        BLKQ=64,
+        BLKK=64,
+        use_bf16=True,
+        tie_feature_map_qk=True,
+        linear_q_2to4=False,
+    ):
         R'''
         Args:
             head_dim: dimension of each head.
@@ -46,12 +76,14 @@ class SparseLinearAttention(nn.Module):
             BLKK: block size for key.
             use_bf16: whether to use bfloat16 (default) or float16 for computation. The conversion to bf16/fp16 is done inside the module.
             tie_feature_map_qk: whether to use the same feature map for query and key.
+            linear_q_2to4: whether to simulate 2:4 activation sparsity on Q in the linear-attention branch.
         '''
         super().__init__()
         self.dtype = torch.bfloat16 if use_bf16 else torch.float16
         self.topk = topk
         self.BLKQ = BLKQ
         self.BLKK = BLKK
+        self.linear_q_2to4 = linear_q_2to4
         self.proj_l = nn.Linear(head_dim, head_dim, dtype=torch.float32)
 
         if feature_map == 'elu':
@@ -103,6 +135,8 @@ class SparseLinearAttention(nn.Module):
         
         q = self.feature_map_q(q).contiguous().to(self.dtype) # c_q
         k = self.feature_map_k(k).contiguous().to(self.dtype) # c_k
+        if self.linear_q_2to4:
+            q = apply_2_to_4_sparsity(q).contiguous()
         def calc_linear(q, k, v):
             kvsum = k.transpose(-1, -2) @ v
             ksum = torch.sum(k, dim=-2, keepdim=True)
@@ -120,7 +154,15 @@ class SparseLinearAttention(nn.Module):
 
 
 class SageSparseLinearAttention(nn.Module):
-    def __init__(self, head_dim, topk, feature_map='softmax', use_bf16=True, tie_feature_map_qk=True):
+    def __init__(
+        self,
+        head_dim,
+        topk,
+        feature_map='softmax',
+        use_bf16=True,
+        tie_feature_map_qk=True,
+        linear_q_2to4=False,
+    ):
         R'''
         Args:
             head_dim: dimension of each head.
@@ -131,12 +173,14 @@ class SageSparseLinearAttention(nn.Module):
             use_bf16: whether to use bfloat16 (default) or float16 for computation. The conversion to bf16/fp16 is done inside the module.
             tie_feature_map_qk: whether to use the same feature map for query and key.
             timestep_adaptive_topk: whether to adaptively adjust topk during diffusion.
+            linear_q_2to4: whether to simulate 2:4 activation sparsity on Q in the linear-attention branch.
         '''
         assert SAGESLA_ENABLED, "Install SpargeAttn first to enable SageSLA."
 
         super().__init__()
         self.dtype = torch.bfloat16 if use_bf16 else torch.float16
         self.topk = topk
+        self.linear_q_2to4 = linear_q_2to4
         self.proj_l = nn.Linear(head_dim, head_dim, dtype=torch.float32)
 
         if feature_map == 'elu':
@@ -242,6 +286,8 @@ class SageSparseLinearAttention(nn.Module):
 
         q = self.feature_map_q(q).contiguous().to(self.dtype) # c_q
         k = self.feature_map_k(k).contiguous().to(self.dtype) # c_k
+        if self.linear_q_2to4:
+            q = apply_2_to_4_sparsity(q).contiguous()
         def calc_linear(q, k, v):
             kvsum = k.transpose(-1, -2) @ v
             ksum = torch.sum(k, dim=-2, keepdim=True)

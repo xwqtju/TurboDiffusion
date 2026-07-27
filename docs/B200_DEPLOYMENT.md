@@ -5,6 +5,11 @@ AI coding is unavailable. It fixes the software baseline, makes CUDA extension
 builds target SM100 only, supports an offline wheelhouse, and provides smoke
 tests that do not require model checkpoints.
 
+If a `turbodiffusion` Python environment already exists on the B200 host but
+PyTorch and the project dependencies are not installed yet, use
+[B200_ENV_INSTALL.md](B200_ENV_INSTALL.md) as the step-by-step installation
+guide.
+
 ## Scope and important architecture limits
 
 - NVIDIA B200 is a Blackwell **SM100** GPU. It is not a Rubin GPU.
@@ -181,9 +186,17 @@ The wrapper defaults to:
 ```text
 attention_type=sla
 sla_topk=0.1
+linear_q_2to4=false
 resolution=480p
 num_frames=81
 num_steps=4
+```
+
+To simulate Rubin-style 2:4 activation sparsity on Q only in the SLA linear
+attention branch, run:
+
+```bash
+LINEAR_Q_2TO4=1 scripts/b200/run_t2v_1_3b.sh
 ```
 
 To isolate an SLA/Triton issue, rerun with:

@@ -14,7 +14,7 @@ RUNTIME_PARAMS = {
 LAUNCH_ONLY_PARAMS = [
     "mode", "model", "dit_path", "high_noise_model_path", "low_noise_model_path",
     "resolution", "aspect_ratio", "attention_type", "sla_topk",
-    "quant_linear", "default_norm", "vae_path", "text_encoder_path",
+    "linear_q_2to4", "quant_linear", "default_norm", "vae_path", "text_encoder_path",
     "boundary", "adaptive_resolution", "ode", "seed",
 ]
 
@@ -39,6 +39,7 @@ def format_config(args: argparse.Namespace, defaults: dict) -> str:
     lines.append(f"  aspect_ratio:    {args.aspect_ratio}")
     lines.append(f"  attention_type:  {args.attention_type}")
     lines.append(f"  sla_topk:        {args.sla_topk}")
+    lines.append(f"  linear_q_2to4:   {args.linear_q_2to4}")
     lines.append(f"  quant_linear:    {args.quant_linear}")
     lines.append(f"  default_norm:    {args.default_norm}")
     lines.append(f"  seed:            {args.seed}")
