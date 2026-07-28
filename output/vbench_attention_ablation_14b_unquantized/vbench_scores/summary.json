@@ -1,0 +1,59 @@
+{
+  "benchmark": "Vchitect/VBench 0.1.5 official source",
+  "mode": "custom_input",
+  "generation": {
+    "model": "TurboWan2.2-I2V-A14B",
+    "quantized": false,
+    "high_noise_checkpoint": "checkpoints/TurboWan2.2-I2V-A14B-high-720P.pth",
+    "low_noise_checkpoint": "checkpoints/TurboWan2.2-I2V-A14B-low-720P.pth",
+    "resolution": "832x480",
+    "num_frames": 65,
+    "fps": 16,
+    "num_steps": 4,
+    "seed": 0,
+    "sla_topk": 0.1,
+    "conditioning_images": "First frames extracted from the previous Original T2V videos"
+  },
+  "num_videos_per_method": 8,
+  "dimensions": [
+    "subject_consistency",
+    "background_consistency",
+    "motion_smoothness",
+    "dynamic_degree",
+    "aesthetic_quality",
+    "imaging_quality"
+  ],
+  "custom_mean_note": "Unweighted arithmetic mean of the six custom-input dimensions; not the official 16-dimension VBench Total Score.",
+  "results": {
+    "original": {
+      "subject_consistency": 0.968978952442,
+      "background_consistency": 0.943832874298,
+      "motion_smoothness": 0.990209547528,
+      "dynamic_degree": 0.625,
+      "aesthetic_quality": 0.623765580356,
+      "imaging_quality": 0.669575737220,
+      "custom_6_dim_mean": 0.803560448641,
+      "mean_generation_seconds": 163.2
+    },
+    "sla": {
+      "subject_consistency": 0.970282006834,
+      "background_consistency": 0.957263469696,
+      "motion_smoothness": 0.990684962054,
+      "dynamic_degree": 0.5,
+      "aesthetic_quality": 0.615302890539,
+      "imaging_quality": 0.660515087715,
+      "custom_6_dim_mean": 0.782341402806,
+      "mean_generation_seconds": 150.1
+    },
+    "sla_q_2to4": {
+      "subject_consistency": 0.969380628318,
+      "background_consistency": 0.955932617188,
+      "motion_smoothness": 0.991167486826,
+      "dynamic_degree": 0.375,
+      "aesthetic_quality": 0.614658027887,
+      "imaging_quality": 0.659918798080,
+      "custom_6_dim_mean": 0.761009593050,
+      "mean_generation_seconds": 155.2
+    }
+  }
+}
