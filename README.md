@@ -209,6 +209,9 @@ see [the B200 VBench evaluation guide](docs/VBENCH_B200_GUIDE.md).
     # --sla_k_4to8_pairwise     Simulate pairwise 4:8 activation sparsity on K for SLA/SageSLA (disabled by default)
     # --sla_q_2to4_share2       Simulate Q 2:4 with an L1-selected mask shared by two tokens
     # --sla_k_2to4_share2       Simulate K 2:4 with an L1-selected mask shared by two tokens
+    # --linear_kv_2to4_operand  Select K or V as the 2:4 operand in the linear K.T@V GEMM
+    # --linear_qkv_2to4_operand Select Q or KV as the 2:4 operand in the linear Q@KV GEMM
+    # --sparsity_profile_path   Write per-layer zero rates and dense-vs-sparse relative-L2 errors to JSON
     # --quant_linear            Enable quantization for linear layers, pass this if using a quantized checkpoint
     # --default_norm            Use the original LayerNorm and RMSNorm of Wan models
 
@@ -277,6 +280,54 @@ python turbodiffusion/inference/wan2.2_i2v_infer.py \
 ```
 
 For SLA training, set `model.config.sla_q_2to4=true` in the Hydra overrides.
+
+#### Linear-attention two-GEMM operand combinations
+
+The SLA linear branch can independently select one 2:4 activation operand in
+each GEMM. `--linear_kv_2to4_operand {k,v}` controls `K.T @ V`, and
+`--linear_qkv_2to4_operand {q,kv}` controls `Q @ KV`. This gives four
+combinations: `K+Q`, `K+KV`, `V+Q`, and `V+KV`. Structured grouping follows
+the corresponding GEMM reduction dimension: the token dimension for `K.T@V`
+and head feature dimension for `Q@KV`. The normalization denominator remains
+dense so the experiment isolates the two GEMM operand choices.
+
+```bash
+python turbodiffusion/inference/wan2.2_i2v_infer.py \
+    ... \
+    --attention_type sla \
+    --linear_kv_2to4_operand k \
+    --linear_qkv_2to4_operand q
+```
+
+#### Per-layer sparsity diagnostics
+
+Add `--sparsity_profile_path PATH.json` to a sparse I2V run to record, for every
+high-noise and low-noise transformer block:
+
+- Q/K zero rate before and after structured sparsification;
+- Q/K relative L2 error, computed as `||sparse - dense||₂ / ||dense||₂`;
+- attention-output relative L2 error against a counterfactual dense attention
+  call using the exact same Q/K/V tensors.
+
+The generated video still uses the sparse attention output. Profiling performs
+an additional dense attention call at every profiled layer, so it is intended
+for numerical validation rather than latency measurement.
+
+```bash
+python turbodiffusion/inference/wan2.2_i2v_infer.py \
+    ... \
+    --attention_type sla \
+    --sla_q_2to4 \
+    --sparsity_profile_path output/sparsity_profiles/q_2to4.json
+```
+
+For the VBench ablation runner, use `--sparsity-profile-dir DIR`; it writes one
+JSON file per sparse method and prompt while leaving Original and plain SLA
+unprofiled. That runner launches one process per GPU and therefore requires a
+configuration that fits on one GPU. For unquantized 14B 720p profiling on two
+32 GB GPUs, pass the same `--sparsity_profile_path` option to
+`wan2.2_i2v_dist_infer.py`; rank 0 writes statistics globally reduced across
+both context-parallel ranks.
 
 Pass `--sla_q_4to8_pairwise` instead to group every eight Q features into four
 adjacent pairs and retain the two pairs with the largest summed absolute value.
@@ -602,6 +653,11 @@ We evaluate video generation on **a single RTX 5090 GPU**. The E2E Time refers t
 </table>
 
 ## Training
+
+For the differentiable dense-layout K+Q 2:4 simulation and its ready-to-launch
+Hydra experiment, see [Dense-layout activation-sparsity fine-tuning](docs/SPARSE_ACTIVATION_FINETUNE.md).
+For the verified two-GPU Wan2.2 I2V high/low expert parameter-efficient path,
+see [Wan2.2 I2V sparse fine-tuning](docs/WAN22_I2V_SPARSE_FINETUNE.md).
 
 In this repo, we provide training code based on Wan2.1 and its synthetic data. The training builds on the rCM codebase (https://github.com/NVlabs/rcm), with infrastructure support including FSDP2, Ulysses CP, and selective activation checkpointing (SAC). For rCM training instructions, please refer to the original rCM repository; [SLA (Sparse-Linear Attention)](https://github.com/thu-ml/SLA) training guidance is provided here.
 

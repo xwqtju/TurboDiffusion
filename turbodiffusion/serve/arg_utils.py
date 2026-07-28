@@ -52,6 +52,10 @@ def parse_args() -> argparse.Namespace:
                         help="Top-k ratio for SLA/SageSLA attention")
     parser.add_argument("--linear_q_2to4", action="store_true",
                         help="Simulate 2:4 activation sparsity on Q in the linear-attention branch")
+    parser.add_argument("--linear_kv_2to4_operand", choices=["none", "k", "v"], default="none",
+                        help="Sparse operand for the linear-attention K.T@V GEMM")
+    parser.add_argument("--linear_qkv_2to4_operand", choices=["none", "q", "kv"], default="none",
+                        help="Sparse operand for the linear-attention Q@KV GEMM")
     parser.add_argument("--sla_q_2to4", action="store_true",
                         help="Simulate 2:4 activation sparsity on SLA/SageSLA queries")
     parser.add_argument("--sla_q_4to8_pairwise", action="store_true",

@@ -20,7 +20,7 @@ from tqdm import tqdm
 
 from imaginaire.utils import log
 from imaginaire.utils.io import save_image_or_video
-from modify_model import create_model, tensor_kwargs
+from modify_model import collect_sparsity_profiles, create_model, tensor_kwargs
 from rcm.datasets.utils import VIDEO_RES_SIZE_INFO
 from rcm.tokenizers.wan2pt1 import Wan2pt1VAEInterface
 from rcm.utils.umt5 import clear_umt5_memory, get_umt5_embedding
@@ -32,6 +32,37 @@ if _single_gpu_spec is None or _single_gpu_spec.loader is None:
 _single_gpu_module = importlib.util.module_from_spec(_single_gpu_spec)
 _single_gpu_spec.loader.exec_module(_single_gpu_module)
 parse_arguments = _single_gpu_module.parse_arguments
+
+
+def merge_rank_profiles(rank_profiles: list[dict]) -> dict:
+    """Sum sufficient statistics across context-parallel ranks."""
+
+    merged = {}
+    for rank_profile in rank_profiles:
+        for model_key in ("high_noise", "low_noise"):
+            model_profile = rank_profile[model_key]
+            destination = merged.setdefault(model_key, {"model": model_profile["model"], "layers": {}})
+            for layer_name, measurements in model_profile["layers"].items():
+                layer = destination["layers"].setdefault(layer_name, {})
+                for label, values in measurements.items():
+                    stats = layer.setdefault(label, {
+                        "calls": 0, "elements": 0, "zeros_before": 0, "zeros_after": 0,
+                        "error_sq_sum": 0.0, "reference_sq_sum": 0.0,
+                    })
+                    for key in stats:
+                        stats[key] += values[key]
+    for model_profile in merged.values():
+        for measurements in model_profile["layers"].values():
+            for stats in measurements.values():
+                elements = stats["elements"]
+                reference_sq_sum = stats["reference_sq_sum"]
+                stats["zero_rate_before"] = stats["zeros_before"] / elements if elements else None
+                stats["zero_rate_after"] = stats["zeros_after"] / elements if elements else None
+                stats["relative_l2_error"] = (
+                    (stats["error_sq_sum"] / reference_sq_sum) ** 0.5
+                    if reference_sq_sum > 0 else None
+                )
+    return merged
 
 
 def init_distributed() -> tuple[int, int]:
@@ -87,6 +118,8 @@ def build_tasks(args) -> list[tuple[str, str, str]]:
 def main() -> None:
     args = parse_arguments()
     tasks = build_tasks(args)
+    if args.sparsity_profile_path is not None and len(tasks) != 1:
+        raise ValueError("Distributed --sparsity_profile_path currently requires exactly one task")
     # The umT5 loader uses a meta-parameter broadcast when torch.distributed is
     # initialized. Compute the small final embedding first on each local GPU,
     # then establish the DiT process group after releasing the encoder.
@@ -196,6 +229,33 @@ def main() -> None:
         gc.collect()
         torch.cuda.empty_cache()
         dist.barrier()
+
+    if args.sparsity_profile_path is not None:
+        local_profile = {
+            "high_noise": collect_sparsity_profiles(high_model, "high_noise"),
+            "low_noise": collect_sparsity_profiles(low_model, "low_noise"),
+        }
+        rank_profiles = [None for _ in range(world_size)]
+        dist.all_gather_object(rank_profiles, local_profile)
+        if rank == 0:
+            profile = {
+                "schema_version": 1,
+                "world_size": world_size,
+                "attention_type": args.attention_type,
+                "sparsity_modes": {
+                    "q_2to4": args.sla_q_2to4,
+                    "q_4to8_pairwise": args.sla_q_4to8_pairwise,
+                    "q_2to4_share_index_2": args.sla_q_2to4_share2,
+                    "k_2to4": args.sla_k_2to4,
+                    "k_4to8_pairwise": args.sla_k_4to8_pairwise,
+                    "k_2to4_share_index_2": args.sla_k_2to4_share2,
+                },
+                **merge_rank_profiles(rank_profiles),
+            }
+            profile_path = Path(args.sparsity_profile_path)
+            profile_path.parent.mkdir(parents=True, exist_ok=True)
+            profile_path.write_text(json.dumps(profile, indent=2) + "\n", encoding="utf-8")
+            log.success(f"Saved distributed sparsity profile to {profile_path}")
 
     del high_model, low_model
     dist.destroy_process_group()

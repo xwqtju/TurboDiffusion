@@ -70,6 +70,8 @@ def replace_attention_with_sla(
     sla_topk: float,
     linear_q_2to4: bool = False,
     sla_q_2to4: bool = False,
+    linear_kv_2to4_operand: str = "none",
+    linear_qkv_2to4_operand: str = "none",
 ):
     for module in model.modules():
         if type(module) is WanSelfAttention:
@@ -77,6 +79,8 @@ def replace_attention_with_sla(
                 head_dim=module.head_dim,
                 topk=sla_topk,
                 linear_q_2to4=linear_q_2to4,
+                linear_kv_2to4_operand=linear_kv_2to4_operand,
+                linear_qkv_2to4_operand=linear_qkv_2to4_operand,
             )
             if sla_q_2to4:
                 enable_q_activation_2_to_4(local_attn)
@@ -127,6 +131,11 @@ class T2VConfig_SLA:
     sla_topk: float = 0.1
     linear_q_2to4: bool = False
     sla_q_2to4: bool = False
+    # Dense-layout structured sparsity simulation in the two linear-attention
+    # GEMMs. K/V is sparsified along tokens for K.T@V; Q/KV is sparsified
+    # along head_dim for Q@KV. Values are zeroed but tensors stay dense.
+    linear_kv_2to4_operand: str = "none"
+    linear_qkv_2to4_operand: str = "none"
 
 
 class T2VModel_SLA(ImaginaireModel):
@@ -193,6 +202,8 @@ class T2VModel_SLA(ImaginaireModel):
                     self.config.sla_topk,
                     self.config.linear_q_2to4,
                     self.config.sla_q_2to4,
+                    self.config.linear_kv_2to4_operand,
+                    self.config.linear_qkv_2to4_operand,
                 )
 
             if self.fsdp_device_mesh:

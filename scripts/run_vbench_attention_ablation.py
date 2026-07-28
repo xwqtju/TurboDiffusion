@@ -24,6 +24,22 @@ METHOD_ARGS = {
     "sla_k_4to8_pairwise": ["--attention_type", "sla", "--sla_k_4to8_pairwise"],
     "sla_q_2to4_share2": ["--attention_type", "sla", "--sla_q_2to4_share2"],
     "sla_k_2to4_share2": ["--attention_type", "sla", "--sla_k_2to4_share2"],
+    "sla_linear_k_q_2to4": [
+        "--attention_type", "sla", "--linear_kv_2to4_operand", "k",
+        "--linear_qkv_2to4_operand", "q",
+    ],
+    "sla_linear_k_kv_2to4": [
+        "--attention_type", "sla", "--linear_kv_2to4_operand", "k",
+        "--linear_qkv_2to4_operand", "kv",
+    ],
+    "sla_linear_v_q_2to4": [
+        "--attention_type", "sla", "--linear_kv_2to4_operand", "v",
+        "--linear_qkv_2to4_operand", "q",
+    ],
+    "sla_linear_v_kv_2to4": [
+        "--attention_type", "sla", "--linear_kv_2to4_operand", "v",
+        "--linear_qkv_2to4_operand", "kv",
+    ],
 }
 
 
@@ -70,6 +86,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--sla-topk", type=float, default=0.1)
     parser.add_argument("--limit", type=int, default=None, help="Use only the first N prompts")
     parser.add_argument("--overwrite", action="store_true")
+    parser.add_argument(
+        "--sparsity-profile-dir",
+        type=Path,
+        default=None,
+        help="Write one per-layer dense-vs-sparse JSON profile per generated sparse video",
+    )
     return parser.parse_args()
 
 
@@ -109,6 +131,9 @@ def build_command(args: argparse.Namespace, task: Task, repo_root: Path) -> list
         str(args.sla_topk),
         *METHOD_ARGS[task.method],
     ]
+    if args.sparsity_profile_dir is not None and task.method not in {"original", "sla"}:
+        profile_path = args.sparsity_profile_dir / task.method / f"{task.output_path.stem}.json"
+        common.extend(["--sparsity_profile_path", str(profile_path.resolve())])
     if args.pipeline == "i2v-a14b":
         assert task.image_path is not None
         return [
@@ -161,6 +186,12 @@ def main() -> int:
     if args.input_image_dir is not None:
         args.input_image_dir = (repo_root / args.input_image_dir).resolve() if not args.input_image_dir.is_absolute() else args.input_image_dir
     args.output_dir = (repo_root / args.output_dir).resolve() if not args.output_dir.is_absolute() else args.output_dir
+    if args.sparsity_profile_dir is not None:
+        args.sparsity_profile_dir = (
+            (repo_root / args.sparsity_profile_dir).resolve()
+            if not args.sparsity_profile_dir.is_absolute()
+            else args.sparsity_profile_dir
+        )
     if args.resolution is None:
         args.resolution = "480p" if args.pipeline == "t2v-1.3b" else "720p"
 
@@ -214,6 +245,7 @@ def main() -> int:
         "aspect_ratio": "16:9",
         "sla_topk": args.sla_topk,
         "prompt_count": len(prompts),
+        "sparsity_profile_dir": str(args.sparsity_profile_dir) if args.sparsity_profile_dir else None,
     }
     (args.output_dir / "config.json").write_text(
         json.dumps(config, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"

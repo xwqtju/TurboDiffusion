@@ -8,6 +8,108 @@ import torch
 from torch import nn
 
 
+def _new_profile_stats() -> dict:
+    return {
+        "calls": 0,
+        "elements": 0,
+        "zeros_before": 0,
+        "zeros_after": 0,
+        "error_sq_sum": 0.0,
+        "reference_sq_sum": 0.0,
+    }
+
+
+def configure_sparsity_profile(attention: nn.Module, enabled: bool = True) -> nn.Module:
+    """Enable expensive dense-vs-sparse diagnostics on an attention module."""
+
+    attention._sparsity_profile_enabled = enabled
+    if enabled and not hasattr(attention, "_sparsity_profile_stats"):
+        attention._sparsity_profile_stats = {
+            "Q": _new_profile_stats(),
+            "K": _new_profile_stats(),
+            "attention_output": _new_profile_stats(),
+        }
+    if enabled and not getattr(attention, "_sparsity_profile_output_hook_enabled", False):
+        attention.register_forward_hook(_profile_attention_output)
+        attention._sparsity_profile_output_hook_enabled = True
+    return attention
+
+
+def _accumulate_error(stats: dict, reference: torch.Tensor, result: torch.Tensor) -> None:
+    difference = result.float() - reference.float()
+    reference_float = reference.float()
+    stats["calls"] += 1
+    stats["elements"] += reference.numel()
+    stats["zeros_before"] += torch.count_nonzero(reference == 0).item()
+    stats["zeros_after"] += torch.count_nonzero(result == 0).item()
+    stats["error_sq_sum"] += difference.square().sum().item()
+    stats["reference_sq_sum"] += reference_float.square().sum().item()
+
+
+def _profiled_sparsify(
+    module: nn.Module,
+    args: tuple,
+    argument_index: int,
+    label: str,
+    sparsify,
+) -> tuple:
+    if getattr(module, "_sparsity_profile_dense_replay", False):
+        return args
+    reference = args[argument_index]
+    result = sparsify(reference)
+    if getattr(module, "_sparsity_profile_enabled", False):
+        # Preserve the inputs before the first sparsity hook. This also makes a
+        # simultaneous Q+K profile compare against a fully dense baseline.
+        if not hasattr(module, "_sparsity_profile_dense_args"):
+            module._sparsity_profile_dense_args = args
+        _accumulate_error(module._sparsity_profile_stats[label], reference, result)
+    return (*args[:argument_index], result, *args[argument_index + 1:])
+
+
+def _profile_attention_output(module: nn.Module, _args: tuple, sparse_output):
+    if getattr(module, "_sparsity_profile_dense_replay", False):
+        return sparse_output
+    dense_args = getattr(module, "_sparsity_profile_dense_args", None)
+    if dense_args is None:
+        return sparse_output
+    del module._sparsity_profile_dense_args
+    module._sparsity_profile_dense_replay = True
+    try:
+        with torch.no_grad():
+            dense_output = module(*dense_args)
+    finally:
+        module._sparsity_profile_dense_replay = False
+    sparse_tensor = sparse_output[0] if isinstance(sparse_output, tuple) else sparse_output
+    dense_tensor = dense_output[0] if isinstance(dense_output, tuple) else dense_output
+    _accumulate_error(module._sparsity_profile_stats["attention_output"], dense_tensor, sparse_tensor)
+    return sparse_output
+
+
+def get_sparsity_profile(attention: nn.Module) -> dict:
+    """Return finalized zero-rate and relative-L2 diagnostics."""
+
+    result = {}
+    for label, raw in getattr(attention, "_sparsity_profile_stats", {}).items():
+        elements = raw["elements"]
+        reference_sq_sum = raw["reference_sq_sum"]
+        result[label] = {
+            "calls": raw["calls"],
+            "elements": elements,
+            "zeros_before": raw["zeros_before"],
+            "zeros_after": raw["zeros_after"],
+            "zero_rate_before": raw["zeros_before"] / elements if elements else None,
+            "zero_rate_after": raw["zeros_after"] / elements if elements else None,
+            "relative_l2_error": (
+                (raw["error_sq_sum"] / reference_sq_sum) ** 0.5
+                if reference_sq_sum > 0
+                else None
+            ),
+            "error_sq_sum": raw["error_sq_sum"],
+            "reference_sq_sum": reference_sq_sum,
+        }
+    return result
+
+
 def sparsify_2_to_4(x: torch.Tensor) -> torch.Tensor:
     """Keep the two largest-magnitude values in every contiguous group of four.
 
@@ -114,7 +216,7 @@ def enable_q_activation_2_to_4(attention: nn.Module) -> nn.Module:
     def sparsify_query(_module: nn.Module, args: tuple) -> tuple:
         if not args:
             raise ValueError("Attention Q 2:4 hook expected query as the first positional argument")
-        return (sparsify_2_to_4(args[0]), *args[1:])
+        return _profiled_sparsify(_module, args, 0, "Q", sparsify_2_to_4)
 
     attention.register_forward_pre_hook(sparsify_query)
     attention._q_activation_2to4_enabled = True
@@ -130,7 +232,7 @@ def enable_q_activation_4_to_8_pairwise(attention: nn.Module) -> nn.Module:
     def sparsify_query(_module: nn.Module, args: tuple) -> tuple:
         if not args:
             raise ValueError("Attention Q 4:8 pairwise hook expected query as the first positional argument")
-        return (sparsify_4_to_8_pairwise(args[0]), *args[1:])
+        return _profiled_sparsify(_module, args, 0, "Q", sparsify_4_to_8_pairwise)
 
     attention.register_forward_pre_hook(sparsify_query)
     attention._q_activation_4to8_pairwise_enabled = True
@@ -146,7 +248,7 @@ def enable_k_activation_2_to_4(attention: nn.Module) -> nn.Module:
     def sparsify_key(_module: nn.Module, args: tuple) -> tuple:
         if len(args) < 2:
             raise ValueError("Attention K 2:4 hook expected key as the second positional argument")
-        return (args[0], sparsify_2_to_4(args[1]), *args[2:])
+        return _profiled_sparsify(_module, args, 1, "K", sparsify_2_to_4)
 
     attention.register_forward_pre_hook(sparsify_key)
     attention._k_activation_2to4_enabled = True
@@ -162,7 +264,7 @@ def enable_k_activation_4_to_8_pairwise(attention: nn.Module) -> nn.Module:
     def sparsify_key(_module: nn.Module, args: tuple) -> tuple:
         if len(args) < 2:
             raise ValueError("Attention K 4:8 pairwise hook expected key as the second positional argument")
-        return (args[0], sparsify_4_to_8_pairwise(args[1]), *args[2:])
+        return _profiled_sparsify(_module, args, 1, "K", sparsify_4_to_8_pairwise)
 
     attention.register_forward_pre_hook(sparsify_key)
     attention._k_activation_4to8_pairwise_enabled = True
@@ -178,7 +280,7 @@ def enable_q_activation_2_to_4_share_index_2(attention: nn.Module) -> nn.Module:
     def sparsify_query(_module: nn.Module, args: tuple) -> tuple:
         if not args:
             raise ValueError("Attention Q 2:4 share-index=2 hook expected query first")
-        return (sparsify_2_to_4_share_index_2(args[0]), *args[1:])
+        return _profiled_sparsify(_module, args, 0, "Q", sparsify_2_to_4_share_index_2)
 
     attention.register_forward_pre_hook(sparsify_query)
     attention._q_activation_2to4_share2_enabled = True
@@ -194,7 +296,7 @@ def enable_k_activation_2_to_4_share_index_2(attention: nn.Module) -> nn.Module:
     def sparsify_key(_module: nn.Module, args: tuple) -> tuple:
         if len(args) < 2:
             raise ValueError("Attention K 2:4 share-index=2 hook expected key second")
-        return (args[0], sparsify_2_to_4_share_index_2(args[1]), *args[2:])
+        return _profiled_sparsify(_module, args, 1, "K", sparsify_2_to_4_share_index_2)
 
     attention.register_forward_pre_hook(sparsify_key)
     attention._k_activation_2to4_share2_enabled = True

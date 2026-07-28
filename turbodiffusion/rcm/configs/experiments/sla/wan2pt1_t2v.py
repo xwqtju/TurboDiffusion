@@ -189,9 +189,40 @@ WAN2PT1_14B_RES480P_T2V: LazyDict = LazyDict(
     flags={"allow_objects": True},
 )
 
+# Fine-tune SLA with dense-layout 2:4 activation sparsity in both linear
+# attention GEMMs: K is sparsified over tokens in K.T@V and Q is sparsified
+# over head_dim in Q@KV. This keeps ordinary dense tensors/autograd and is a
+# numerical simulation; it does not claim sparse-kernel speedup.
+WAN2PT1_14B_RES480P_T2V_SLA_KQ_2TO4: LazyDict = LazyDict(
+    dict(
+        defaults=[
+            f"/experiment/{WAN2PT1_14B_RES480P_T2V['job']['name']}",
+            "_self_",
+        ],
+        job=dict(
+            group="SLA_Wan_sparse_finetune",
+            name="wan2pt1_14B_res480p_t2v_SLA_KQ_2to4",
+        ),
+        model=dict(
+            config=dict(
+                linear_kv_2to4_operand="k",
+                linear_qkv_2to4_operand="q",
+            ),
+        ),
+        optimizer=dict(lr=1e-6),
+        checkpoint=dict(save_iter=100),
+        trainer=dict(max_iter=10_000, logging_iter=10),
+    ),
+    flags={"allow_objects": True},
+)
+
 cs = ConfigStore.instance()
 
-job_list = [WAN2PT1_1PT3B_RES480P_T2V, WAN2PT1_14B_RES480P_T2V]
+job_list = [
+    WAN2PT1_1PT3B_RES480P_T2V,
+    WAN2PT1_14B_RES480P_T2V,
+    WAN2PT1_14B_RES480P_T2V_SLA_KQ_2TO4,
+]
 
 for job in job_list:
     cs.store(group="experiment", package="_global_", name=job["job"]["name"], node=job)

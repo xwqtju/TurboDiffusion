@@ -55,6 +55,42 @@ def apply_2_to_4_sparsity(x):
     return torch.cat((x_sparse_part, x_tail), dim=-1)
 
 
+def apply_2_to_4_sparsity_along_dim(x, dim):
+    """Apply 2:4 along a selected GEMM reduction dimension."""
+    dim = dim if dim >= 0 else x.ndim + dim
+    if dim == x.ndim - 1:
+        return apply_2_to_4_sparsity(x)
+    order = [axis for axis in range(x.ndim) if axis != dim] + [dim]
+    inverse = [0] * x.ndim
+    for new_axis, old_axis in enumerate(order):
+        inverse[old_axis] = new_axis
+    return apply_2_to_4_sparsity(x.permute(order)).permute(inverse).contiguous()
+
+
+def linear_attention_2to4(q, k, v, kv_sparse_operand="none", qkv_sparse_operand="none"):
+    """Linear attention with one optional 2:4 operand in each GEMM.
+
+    The structured groups follow each GEMM's reduction dimension:
+    ``K.T @ V`` uses the token dimension, while ``Q @ KV`` uses head_dim.
+    The normalization denominator remains dense to isolate GEMM-operand error.
+    """
+    if kv_sparse_operand not in {"none", "k", "v"}:
+        raise ValueError(f"Invalid K.T@V sparse operand: {kv_sparse_operand}")
+    if qkv_sparse_operand not in {"none", "q", "kv"}:
+        raise ValueError(f"Invalid Q@KV sparse operand: {qkv_sparse_operand}")
+
+    k_for_gemm = apply_2_to_4_sparsity_along_dim(k, -2) if kv_sparse_operand == "k" else k
+    v_for_gemm = apply_2_to_4_sparsity_along_dim(v, -2) if kv_sparse_operand == "v" else v
+    kvsum = k_for_gemm.transpose(-1, -2) @ v_for_gemm
+
+    q_for_gemm = apply_2_to_4_sparsity(q) if qkv_sparse_operand == "q" else q
+    kv_for_gemm = apply_2_to_4_sparsity_along_dim(kvsum, -2) if qkv_sparse_operand == "kv" else kvsum
+    numerator = q_for_gemm @ kv_for_gemm
+    ksum = torch.sum(k, dim=-2, keepdim=True)
+    denominator = 1e-5 + (q * ksum).sum(dim=-1, keepdim=True)
+    return numerator / denominator
+
+
 class SparseLinearAttention(nn.Module):
     def __init__(
         self,
@@ -66,6 +102,8 @@ class SparseLinearAttention(nn.Module):
         use_bf16=True,
         tie_feature_map_qk=True,
         linear_q_2to4=False,
+        linear_kv_2to4_operand="none",
+        linear_qkv_2to4_operand="none",
     ):
         R'''
         Args:
@@ -84,6 +122,10 @@ class SparseLinearAttention(nn.Module):
         self.BLKQ = BLKQ
         self.BLKK = BLKK
         self.linear_q_2to4 = linear_q_2to4
+        self.linear_kv_2to4_operand = linear_kv_2to4_operand
+        self.linear_qkv_2to4_operand = linear_qkv_2to4_operand
+        if linear_q_2to4 and linear_qkv_2to4_operand != "none":
+            raise ValueError("--linear_q_2to4 conflicts with --linear_qkv_2to4_operand")
         self.proj_l = nn.Linear(head_dim, head_dim, dtype=torch.float32)
 
         if feature_map == 'elu':
@@ -137,11 +179,11 @@ class SparseLinearAttention(nn.Module):
         k = self.feature_map_k(k).contiguous().to(self.dtype) # c_k
         if self.linear_q_2to4:
             q = apply_2_to_4_sparsity(q).contiguous()
-        def calc_linear(q, k, v):
-            kvsum = k.transpose(-1, -2) @ v
-            ksum = torch.sum(k, dim=-2, keepdim=True)
-            return (q @ kvsum) / (1e-5 + (q * ksum).sum(dim=-1, keepdim=True))
-        o_l = calc_linear(q, k, v)
+        o_l = linear_attention_2to4(
+            q, k, v,
+            kv_sparse_operand=self.linear_kv_2to4_operand,
+            qkv_sparse_operand=self.linear_qkv_2to4_operand,
+        )
 
         with torch.amp.autocast('cuda', dtype=self.dtype):
             o_l = self.proj_l(o_l)
@@ -162,6 +204,8 @@ class SageSparseLinearAttention(nn.Module):
         use_bf16=True,
         tie_feature_map_qk=True,
         linear_q_2to4=False,
+        linear_kv_2to4_operand="none",
+        linear_qkv_2to4_operand="none",
     ):
         R'''
         Args:
@@ -181,6 +225,10 @@ class SageSparseLinearAttention(nn.Module):
         self.dtype = torch.bfloat16 if use_bf16 else torch.float16
         self.topk = topk
         self.linear_q_2to4 = linear_q_2to4
+        self.linear_kv_2to4_operand = linear_kv_2to4_operand
+        self.linear_qkv_2to4_operand = linear_qkv_2to4_operand
+        if linear_q_2to4 and linear_qkv_2to4_operand != "none":
+            raise ValueError("--linear_q_2to4 conflicts with --linear_qkv_2to4_operand")
         self.proj_l = nn.Linear(head_dim, head_dim, dtype=torch.float32)
 
         if feature_map == 'elu':
@@ -288,11 +336,11 @@ class SageSparseLinearAttention(nn.Module):
         k = self.feature_map_k(k).contiguous().to(self.dtype) # c_k
         if self.linear_q_2to4:
             q = apply_2_to_4_sparsity(q).contiguous()
-        def calc_linear(q, k, v):
-            kvsum = k.transpose(-1, -2) @ v
-            ksum = torch.sum(k, dim=-2, keepdim=True)
-            return (q @ kvsum) / (1e-5 + (q * ksum).sum(dim=-1, keepdim=True))
-        o_l = calc_linear(q, k, v)
+        o_l = linear_attention_2to4(
+            q, k, v,
+            kv_sparse_operand=self.linear_kv_2to4_operand,
+            qkv_sparse_operand=self.linear_qkv_2to4_operand,
+        )
 
         with torch.amp.autocast('cuda', dtype=self.dtype):
             o_l = self.proj_l(o_l)

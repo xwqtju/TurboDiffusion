@@ -15,7 +15,9 @@
 
 import argparse
 import gc
+import json
 import math
+from pathlib import Path
 
 import torch
 from einops import rearrange, repeat
@@ -31,7 +33,7 @@ from rcm.datasets.utils import VIDEO_RES_SIZE_INFO
 from rcm.utils.umt5 import clear_umt5_memory, get_umt5_embedding
 from rcm.tokenizers.wan2pt1 import Wan2pt1VAEInterface
 
-from modify_model import tensor_kwargs, create_model
+from modify_model import collect_sparsity_profiles, tensor_kwargs, create_model
 
 torch._dynamo.config.suppress_errors = True
 
@@ -62,12 +64,26 @@ def parse_arguments() -> argparse.Namespace:
     parser.add_argument("--attention_type", choices=["sla", "sagesla", "original"], default="sagesla", help="Type of attention mechanism to use")
     parser.add_argument("--sla_topk", type=float, default=0.1, help="Top-k ratio for SLA/SageSLA attention")
     parser.add_argument("--linear_q_2to4", action="store_true", help="Simulate 2:4 activation sparsity on Q in the linear-attention branch")
+    parser.add_argument(
+        "--linear_kv_2to4_operand", choices=["none", "k", "v"], default="none",
+        help="Select the 2:4 sparse operand for the linear-attention K.T@V GEMM",
+    )
+    parser.add_argument(
+        "--linear_qkv_2to4_operand", choices=["none", "q", "kv"], default="none",
+        help="Select the 2:4 sparse operand for the linear-attention Q@KV GEMM",
+    )
     parser.add_argument("--sla_q_2to4", action="store_true", help="Simulate 2:4 activation sparsity on SLA/SageSLA queries")
     parser.add_argument("--sla_q_4to8_pairwise", action="store_true", help="Simulate pairwise 4:8 activation sparsity on SLA/SageSLA queries")
     parser.add_argument("--sla_k_2to4", action="store_true", help="Simulate 2:4 activation sparsity on SLA/SageSLA keys")
     parser.add_argument("--sla_k_4to8_pairwise", action="store_true", help="Simulate pairwise 4:8 activation sparsity on SLA/SageSLA keys")
     parser.add_argument("--sla_q_2to4_share2", action="store_true", help="Simulate Q 2:4 with one L1-selected mask shared by two tokens")
     parser.add_argument("--sla_k_2to4_share2", action="store_true", help="Simulate K 2:4 with one L1-selected mask shared by two tokens")
+    parser.add_argument(
+        "--sparsity_profile_path",
+        type=str,
+        default=None,
+        help="Write per-layer activation zero rates and dense-vs-sparse relative-L2 errors to JSON; doubles attention compute",
+    )
     parser.add_argument("--quant_linear", action="store_true", help="Whether to replace Linear layers with quantized versions")
     parser.add_argument("--default_norm", action="store_true", help="Whether to replace LayerNorm/RMSNorm layers with faster versions")
     parser.add_argument("--serve", action="store_true", help="Launch interactive TUI server mode (keeps model loaded)")
@@ -221,6 +237,25 @@ if __name__ == "__main__":
                 )
     samples = x.float()
     low_noise_model.cpu()
+    if args.sparsity_profile_path is not None:
+        profile = {
+            "schema_version": 1,
+            "attention_type": args.attention_type,
+            "sparsity_modes": {
+                "q_2to4": args.sla_q_2to4,
+                "q_4to8_pairwise": args.sla_q_4to8_pairwise,
+                "q_2to4_share_index_2": args.sla_q_2to4_share2,
+                "k_2to4": args.sla_k_2to4,
+                "k_4to8_pairwise": args.sla_k_4to8_pairwise,
+                "k_2to4_share_index_2": args.sla_k_2to4_share2,
+            },
+            "high_noise": collect_sparsity_profiles(high_noise_model, "high_noise"),
+            "low_noise": collect_sparsity_profiles(low_noise_model, "low_noise"),
+        }
+        profile_path = Path(args.sparsity_profile_path)
+        profile_path.parent.mkdir(parents=True, exist_ok=True)
+        profile_path.write_text(json.dumps(profile, indent=2) + "\n", encoding="utf-8")
+        log.info(f"Sparsity profile saved to {profile_path}")
     del net, high_noise_model, low_noise_model
     gc.collect()
     torch.cuda.empty_cache()

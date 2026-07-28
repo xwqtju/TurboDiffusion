@@ -42,7 +42,10 @@ from rcm.utils.structured_sparsity import (
     enable_k_activation_4_to_8_pairwise,
     enable_q_activation_2_to_4_share_index_2,
     enable_k_activation_2_to_4_share_index_2,
+    configure_sparsity_profile,
+    get_sparsity_profile,
 )
+from rcm.utils.selective_activation_checkpoint import SACConfig
 
 
 def replace_attention(
@@ -50,12 +53,15 @@ def replace_attention(
     attention_type: str,
     sla_topk: float,
     linear_q_2to4: bool = False,
+    linear_kv_2to4_operand: str = "none",
+    linear_qkv_2to4_operand: str = "none",
     sla_q_2to4: bool = False,
     sla_q_4to8_pairwise: bool = False,
     sla_k_2to4: bool = False,
     sla_k_4to8_pairwise: bool = False,
     sla_q_2to4_share2: bool = False,
     sla_k_2to4_share2: bool = False,
+    sparsity_profile: bool = False,
 ) -> torch.nn.Module:
     assert attention_type in ["sla", "sagesla"], "Invalid attention type."
     if sum((sla_q_2to4, sla_q_4to8_pairwise, sla_q_2to4_share2)) > 1:
@@ -63,7 +69,7 @@ def replace_attention(
     if sum((sla_k_2to4, sla_k_4to8_pairwise, sla_k_2to4_share2)) > 1:
         raise ValueError("K activation sparsity modes are mutually exclusive")
     
-    for module in model.modules():
+    for module_name, module in model.named_modules():
         if type(module) is WanSelfAttention2pt1 or type(module) is WanSelfAttention2pt2:
             if attention_type == "sla":
                 local_attn = SLA(
@@ -72,13 +78,20 @@ def replace_attention(
                     BLKQ=128,
                     BLKK=64,
                     linear_q_2to4=linear_q_2to4,
+                    linear_kv_2to4_operand=linear_kv_2to4_operand,
+                    linear_qkv_2to4_operand=linear_qkv_2to4_operand,
                 )
             elif attention_type == "sagesla":
                 local_attn = SageSLA(
                     head_dim=module.dim // module.num_heads,
                     topk=sla_topk,
                     linear_q_2to4=linear_q_2to4,
+                    linear_kv_2to4_operand=linear_kv_2to4_operand,
+                    linear_qkv_2to4_operand=linear_qkv_2to4_operand,
                 )
+            if sparsity_profile:
+                configure_sparsity_profile(local_attn)
+                local_attn._sparsity_profile_layer_name = module_name
             if sla_q_2to4:
                 enable_q_activation_2_to_4(local_attn)
             if sla_q_4to8_pairwise:
@@ -93,6 +106,17 @@ def replace_attention(
                 enable_k_activation_2_to_4_share_index_2(local_attn)
             module.attn_op.local_attn = local_attn
     return model
+
+
+def collect_sparsity_profiles(model: torch.nn.Module, model_label: str) -> dict:
+    """Collect finalized per-layer sparsity diagnostics from a model."""
+
+    layers = {}
+    for module_name, module in model.named_modules():
+        if hasattr(module, "_sparsity_profile_stats"):
+            layer_name = getattr(module, "_sparsity_profile_layer_name", module_name)
+            layers[layer_name] = get_sparsity_profile(module)
+    return {"model": model_label, "layers": layers}
 
 
 def replace_linear_norm(
@@ -125,7 +149,8 @@ def replace_linear_norm(
 
 tensor_kwargs = {"device": "cuda", "dtype": torch.bfloat16}
 
-def select_model(model_name: str) -> torch.nn.Module:
+def select_model(model_name: str, sac_mode: str = "mm_only") -> torch.nn.Module:
+    sac_config = SACConfig(mode=sac_mode)
     if model_name == "Wan2.1-1.3B":
         return WanModel2pt1(
             dim=1536,
@@ -138,6 +163,7 @@ def select_model(model_name: str) -> torch.nn.Module:
             num_layers=30,
             out_dim=16,
             text_len=512,
+            sac_config=sac_config,
         )
     elif model_name == "Wan2.1-14B":
         return WanModel2pt1(
@@ -151,6 +177,7 @@ def select_model(model_name: str) -> torch.nn.Module:
             num_layers=40,
             out_dim=16,
             text_len=512,
+            sac_config=sac_config,
         )
     elif model_name == "Wan2.2-A14B":
         return WanModel2pt2(
@@ -164,6 +191,7 @@ def select_model(model_name: str) -> torch.nn.Module:
             num_layers=40,
             out_dim=16,
             text_len=512,
+            sac_config=sac_config,
         )
     else:
         raise ValueError(f"Unknown model name: {model_name}")
@@ -171,7 +199,7 @@ def select_model(model_name: str) -> torch.nn.Module:
 
 def create_model(dit_path: str, args: argparse.Namespace, target_device: str | torch.device = "cuda") -> torch.nn.Module:
     with torch.device("meta"):
-        net = select_model(args.model)
+        net = select_model(args.model, sac_mode=getattr(args, "sac_mode", "mm_only"))
 
     state_dict = load_state_dict(dit_path)
     if args.attention_type == "original":
@@ -186,12 +214,15 @@ def create_model(dit_path: str, args: argparse.Namespace, target_device: str | t
             attention_type=args.attention_type,
             sla_topk=args.sla_topk,
             linear_q_2to4=getattr(args, "linear_q_2to4", False),
+            linear_kv_2to4_operand=getattr(args, "linear_kv_2to4_operand", "none"),
+            linear_qkv_2to4_operand=getattr(args, "linear_qkv_2to4_operand", "none"),
             sla_q_2to4=getattr(args, "sla_q_2to4", False),
             sla_q_4to8_pairwise=getattr(args, "sla_q_4to8_pairwise", False),
             sla_k_2to4=getattr(args, "sla_k_2to4", False),
             sla_k_4to8_pairwise=getattr(args, "sla_k_4to8_pairwise", False),
             sla_q_2to4_share2=getattr(args, "sla_q_2to4_share2", False),
             sla_k_2to4_share2=getattr(args, "sla_k_2to4_share2", False),
+            sparsity_profile=getattr(args, "sparsity_profile_path", None) is not None,
         )
     replace_linear_norm(net, replace_linear=args.quant_linear, replace_norm=not args.default_norm, quantize=False)
     net.load_state_dict(state_dict, assign=True)
