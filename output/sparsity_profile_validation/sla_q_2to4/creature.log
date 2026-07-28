@@ -1,0 +1,71 @@
+/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/megatron/core/optimizer/clip_grads.py:32: UserWarning: Transformer Engine and Apex are not installed. Falling back to local implementations of multi_tensor_applier, multi_tensor_l2norm, and multi_tensor_scale
+  warnings.warn(
+[07-28 14:21:22|INFO|turbodiffusion/inference/wan2.2_i2v_infer.py:104:<module>] Computing embedding for prompt: 3D animation of a small, round, fluffy creature with big, expressive eyes explores a vibrant, enchanted forest. The creature, a whimsical blend of a rabbit and a squirrel, has soft blue fur and a bushy, striped tail. It hops along a sparkling stream,its eyes wide with wonder. The forest is alive with magical elements: flowers that glow and change colors, trees with leaves in shades of purple and silver, and small floating lights that resemble fireflies. The creature stops to interact playfully with a group of tiny, fairy-like beings dancing around a mushroom ring. The creature looks up in awe at a large, glowing tree that seems to be the heart of the forest.
+[07-28 14:21:22|INFO|turbodiffusion/rcm/utils/umt5.py:495:__init__] loading /home/user/桌面/workspace/TurboDiffusion/checkpoints/models_t5_umt5-xxl-enc-bf16.pth
+[07-28 14:21:35|INFO|turbodiffusion/inference/wan2.2_i2v_infer.py:109:<module>] Loading DiT models.
+[07-28 14:21:35|INFO|turbodiffusion/rcm/networks/wan2pt2.py:746:enable_selective_checkpoint] Enable selective checkpoint with mm_only, for every 1 blocks. Total blocks: 40
+[07-28 14:22:05|INFO|turbodiffusion/rcm/networks/wan2pt2.py:746:enable_selective_checkpoint] Enable selective checkpoint with mm_only, for every 1 blocks. Total blocks: 40
+[07-28 14:22:35|SUCCESS|turbodiffusion/inference/wan2.2_i2v_infer.py:114:<module>] Successfully loaded DiT model.
+[07-28 14:22:36|INFO|turbodiffusion/rcm/tokenizers/wan2pt1.py:592:_video_vae] loading /home/user/桌面/workspace/TurboDiffusion/checkpoints/Wan2.1_VAE.pth
+[07-28 14:22:36|INFO|turbodiffusion/inference/wan2.2_i2v_infer.py:118:<module>] Loading and preprocessing image from: /home/user/桌面/workspace/TurboDiffusion/output/vbench_attention_ablation_14b_unquantized/input_images/creature.png
+[07-28 14:22:36|INFO|turbodiffusion/inference/wan2.2_i2v_infer.py:140:<module>] Fixed resolution mode.
+[07-28 14:22:36|INFO|turbodiffusion/inference/wan2.2_i2v_infer.py:142:<module>] Resolution set to: 1280x720
+[07-28 14:22:36|INFO|turbodiffusion/inference/wan2.2_i2v_infer.py:148:<module>] Preprocessing image to 1280x720...
+[07-28 14:22:41|INFO|turbodiffusion/inference/wan2.2_i2v_infer.py:174:<module>] Generating with prompt: 3D animation of a small, round, fluffy creature with big, expressive eyes explores a vibrant, enchanted forest. The creature, a whimsical blend of a rabbit and a squirrel, has soft blue fur and a bushy, striped tail. It hops along a sparkling stream,its eyes wide with wonder. The forest is alive with magical elements: flowers that glow and change colors, trees with leaves in shades of purple and silver, and small floating lights that resemble fireflies. The creature stops to interact playfully with a group of tiny, fairy-like beings dancing around a mushroom ring. The creature looks up in awe at a large, glowing tree that seems to be the heart of the forest.
+Sampling:   0%|          | 0/4 [00:00<?, ?it/s]Sampling:   0%|          | 0/4 [00:00<?, ?it/s]
+Traceback (most recent call last):
+  File "/home/user/桌面/workspace/TurboDiffusion/turbodiffusion/inference/wan2.2_i2v_infer.py", line 218, in <module>
+    v_pred = net(x_B_C_T_H_W=x.to(**tensor_kwargs), timesteps_B_T=(t_cur.float() * ones * 1000).to(**tensor_kwargs), **condition).to(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/桌面/workspace/TurboDiffusion/turbodiffusion/rcm/networks/wan2pt2.py", line 642, in forward
+    x_B_L_D = block(x_B_L_D, **kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/distributed/algorithms/_checkpoint/checkpoint_wrapper.py", line 171, in forward
+    return self.checkpoint_fn(  # type: ignore[misc]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/_compile.py", line 53, in inner
+    return disable_fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/_dynamo/eval_frame.py", line 929, in _fn
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/utils/checkpoint.py", line 495, in checkpoint
+    ret = function(*args, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/桌面/workspace/TurboDiffusion/turbodiffusion/rcm/networks/wan2pt2.py", line 362, in forward
+    y = self.self_attn((self.norm1(x).float() * (1 + e[1]) + e[0]).type_as(x), seq_lens, freqs)
+                        ^^^^^^^^^^^^^
+  File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/桌面/workspace/TurboDiffusion/turbodiffusion/ops/core.py", line 478, in forward
+    return layernorm(x.float(), self.weight, self.bias, self.eps, self.elementwise_affine).to(x.dtype)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/桌面/workspace/TurboDiffusion/turbodiffusion/ops/core.py", line 386, in layernorm
+    return layernorm_noparam(x, eps)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/桌面/workspace/TurboDiffusion/turbodiffusion/ops/core.py", line 346, in layernorm_noparam
+    y = torch.empty_like(x, dtype=torch.float32)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 1.44 GiB. GPU 0 has a total capacity of 31.36 GiB of which 1.13 GiB is free. Including non-PyTorch memory, this process has 29.84 GiB memory in use. Of the allocated memory 29.20 GiB is allocated by PyTorch, and 46.75 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
