@@ -35,7 +35,14 @@ from SLA import (
     SparseLinearAttention as SLA,
     SageSparseLinearAttention as SageSLA
 )
-from rcm.utils.structured_sparsity import enable_q_activation_2_to_4
+from rcm.utils.structured_sparsity import (
+    enable_q_activation_2_to_4,
+    enable_q_activation_4_to_8_pairwise,
+    enable_k_activation_2_to_4,
+    enable_k_activation_4_to_8_pairwise,
+    enable_q_activation_2_to_4_share_index_2,
+    enable_k_activation_2_to_4_share_index_2,
+)
 
 
 def replace_attention(
@@ -44,8 +51,17 @@ def replace_attention(
     sla_topk: float,
     linear_q_2to4: bool = False,
     sla_q_2to4: bool = False,
+    sla_q_4to8_pairwise: bool = False,
+    sla_k_2to4: bool = False,
+    sla_k_4to8_pairwise: bool = False,
+    sla_q_2to4_share2: bool = False,
+    sla_k_2to4_share2: bool = False,
 ) -> torch.nn.Module:
     assert attention_type in ["sla", "sagesla"], "Invalid attention type."
+    if sum((sla_q_2to4, sla_q_4to8_pairwise, sla_q_2to4_share2)) > 1:
+        raise ValueError("Q activation sparsity modes are mutually exclusive")
+    if sum((sla_k_2to4, sla_k_4to8_pairwise, sla_k_2to4_share2)) > 1:
+        raise ValueError("K activation sparsity modes are mutually exclusive")
     
     for module in model.modules():
         if type(module) is WanSelfAttention2pt1 or type(module) is WanSelfAttention2pt2:
@@ -65,6 +81,16 @@ def replace_attention(
                 )
             if sla_q_2to4:
                 enable_q_activation_2_to_4(local_attn)
+            if sla_q_4to8_pairwise:
+                enable_q_activation_4_to_8_pairwise(local_attn)
+            if sla_k_2to4:
+                enable_k_activation_2_to_4(local_attn)
+            if sla_k_4to8_pairwise:
+                enable_k_activation_4_to_8_pairwise(local_attn)
+            if sla_q_2to4_share2:
+                enable_q_activation_2_to_4_share_index_2(local_attn)
+            if sla_k_2to4_share2:
+                enable_k_activation_2_to_4_share_index_2(local_attn)
             module.attn_op.local_attn = local_attn
     return model
 
@@ -161,6 +187,11 @@ def create_model(dit_path: str, args: argparse.Namespace, target_device: str | t
             sla_topk=args.sla_topk,
             linear_q_2to4=getattr(args, "linear_q_2to4", False),
             sla_q_2to4=getattr(args, "sla_q_2to4", False),
+            sla_q_4to8_pairwise=getattr(args, "sla_q_4to8_pairwise", False),
+            sla_k_2to4=getattr(args, "sla_k_2to4", False),
+            sla_k_4to8_pairwise=getattr(args, "sla_k_4to8_pairwise", False),
+            sla_q_2to4_share2=getattr(args, "sla_q_2to4_share2", False),
+            sla_k_2to4_share2=getattr(args, "sla_k_2to4_share2", False),
         )
     replace_linear_norm(net, replace_linear=args.quant_linear, replace_norm=not args.default_norm, quantize=False)
     net.load_state_dict(state_dict, assign=True)
@@ -178,6 +209,11 @@ def parse_arguments() -> argparse.Namespace:
     parser.add_argument("--sla_topk", type=float, default=0.2, help="Top-k ratio for SLA/SageSLA attention")
     parser.add_argument("--linear_q_2to4", action="store_true", help="Simulate 2:4 activation sparsity on Q in the linear-attention branch")
     parser.add_argument("--sla_q_2to4", action="store_true", help="Simulate 2:4 activation sparsity on SLA/SageSLA queries")
+    parser.add_argument("--sla_q_4to8_pairwise", action="store_true", help="Simulate pairwise 4:8 activation sparsity on SLA/SageSLA queries")
+    parser.add_argument("--sla_k_2to4", action="store_true", help="Simulate 2:4 activation sparsity on SLA/SageSLA keys")
+    parser.add_argument("--sla_k_4to8_pairwise", action="store_true", help="Simulate pairwise 4:8 activation sparsity on SLA/SageSLA keys")
+    parser.add_argument("--sla_q_2to4_share2", action="store_true", help="Simulate Q 2:4 with one L1-selected mask shared by two tokens")
+    parser.add_argument("--sla_k_2to4_share2", action="store_true", help="Simulate K 2:4 with one L1-selected mask shared by two tokens")
     parser.add_argument("--quant_linear", action="store_true", help="Whether to replace Linear layers with quantized versions")
     parser.add_argument("--default_norm", action="store_true", help="Whether to replace LayerNorm/RMSNorm layers with faster versions")
     return parser.parse_args()
@@ -210,6 +246,11 @@ if __name__ == "__main__":
             sla_topk=args.sla_topk,
             linear_q_2to4=args.linear_q_2to4,
             sla_q_2to4=args.sla_q_2to4,
+            sla_q_4to8_pairwise=args.sla_q_4to8_pairwise,
+            sla_k_2to4=args.sla_k_2to4,
+            sla_k_4to8_pairwise=args.sla_k_4to8_pairwise,
+            sla_q_2to4_share2=args.sla_q_2to4_share2,
+            sla_k_2to4_share2=args.sla_k_2to4_share2,
         )
     net.load_state_dict(state_dict_dit_compatible, strict=False, assign=True)
     net = net.to(tensor_kwargs["device"]).eval()

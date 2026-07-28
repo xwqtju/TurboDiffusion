@@ -159,6 +159,11 @@ see [the B200 VBench evaluation guide](docs/VBENCH_B200_GUIDE.md).
     # --attention_type      Attention module to use: original, sla or sagesla (default: sagesla)
     # --sla_topk            Top-k ratio for SLA/SageSLA attention (default: 0.1), we recommend using 0.15 for better video quality
     # --sla_q_2to4          Simulate 2:4 activation sparsity on Q for SLA/SageSLA (disabled by default)
+    # --sla_q_4to8_pairwise Simulate pairwise 4:8 activation sparsity on Q for SLA/SageSLA (disabled by default)
+    # --sla_k_2to4          Simulate 2:4 activation sparsity on K for SLA/SageSLA (disabled by default)
+    # --sla_k_4to8_pairwise Simulate pairwise 4:8 activation sparsity on K for SLA/SageSLA (disabled by default)
+    # --sla_q_2to4_share2   Simulate Q 2:4 with an L1-selected mask shared by two tokens
+    # --sla_k_2to4_share2   Simulate K 2:4 with an L1-selected mask shared by two tokens
     # --quant_linear        Enable quantization for linear layers, pass this if using a quantized checkpoint
     # --default_norm        Use the original LayerNorm and RMSNorm of Wan models
 
@@ -199,6 +204,11 @@ see [the B200 VBench evaluation guide](docs/VBENCH_B200_GUIDE.md).
     # --attention_type          Attention module to use: original, sla or sagesla (default: sagesla)
     # --sla_topk                Top-k ratio for SLA/SageSLA attention (default: 0.1), we recommend using 0.15 for better video quality
     # --sla_q_2to4              Simulate 2:4 activation sparsity on Q for SLA/SageSLA (disabled by default)
+    # --sla_q_4to8_pairwise     Simulate pairwise 4:8 activation sparsity on Q for SLA/SageSLA (disabled by default)
+    # --sla_k_2to4              Simulate 2:4 activation sparsity on K for SLA/SageSLA (disabled by default)
+    # --sla_k_4to8_pairwise     Simulate pairwise 4:8 activation sparsity on K for SLA/SageSLA (disabled by default)
+    # --sla_q_2to4_share2       Simulate Q 2:4 with an L1-selected mask shared by two tokens
+    # --sla_k_2to4_share2       Simulate K 2:4 with an L1-selected mask shared by two tokens
     # --quant_linear            Enable quantization for linear layers, pass this if using a quantized checkpoint
     # --default_norm            Use the original LayerNorm and RMSNorm of Wan models
 
@@ -267,6 +277,19 @@ python turbodiffusion/inference/wan2.2_i2v_infer.py \
 ```
 
 For SLA training, set `model.config.sla_q_2to4=true` in the Hydra overrides.
+
+Pass `--sla_q_4to8_pairwise` instead to group every eight Q features into four
+adjacent pairs and retain the two pairs with the largest summed absolute value.
+The Q 2:4 and Q 4:8 pairwise modes are mutually exclusive.
+
+The corresponding K-only simulations are `--sla_k_2to4` and
+`--sla_k_4to8_pairwise`. They sparsify K after RoPE and before the complete SLA
+module, while leaving Q unchanged. The two K modes are mutually exclusive.
+
+`--sla_q_2to4_share2` and `--sla_k_2to4_share2` pair consecutive sequence
+tokens. For every head and group of four features, they sum each feature's
+absolute value across the two tokens and retain the same top-two feature indices
+in both tokens. Masks are recomputed per layer and diffusion step.
 
 Interactive inference via the terminal is available at `turbodiffusion/serve/`. This allows multi-turn video generation without reloading the model.
 

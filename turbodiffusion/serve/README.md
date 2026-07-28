@@ -57,6 +57,11 @@ PYTHONPATH=turbodiffusion python turbodiffusion/inference/wan2.2_i2v_infer.py --
 | `--sla_topk` | Top-k ratio for SLA attention. Default: `0.1` |
 | `--linear_q_2to4` | Simulate 2:4 activation sparsity on Q in the SLA/SageSLA linear-attention branch |
 | `--sla_q_2to4` | Simulate Q activation 2:4 sparsity for SLA/SageSLA. Disabled by default |
+| `--sla_q_4to8_pairwise` | Simulate pairwise Q activation 4:8 sparsity for SLA/SageSLA. Disabled by default |
+| `--sla_k_2to4` | Simulate K activation 2:4 sparsity for SLA/SageSLA. Disabled by default |
+| `--sla_k_4to8_pairwise` | Simulate pairwise K activation 4:8 sparsity for SLA/SageSLA. Disabled by default |
+| `--sla_q_2to4_share2` | Q 2:4 with an L1-selected feature mask shared by two tokens |
+| `--sla_k_2to4_share2` | K 2:4 with an L1-selected feature mask shared by two tokens |
 | `--quant_linear` | Enable quantized linear layers |
 | `--default_norm` | Use default (non-optimized) normalization |
 

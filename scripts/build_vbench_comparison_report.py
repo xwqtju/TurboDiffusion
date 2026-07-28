@@ -13,11 +13,20 @@ from pathlib import Path
 import imageio_ffmpeg
 
 
-METHODS = ("original", "sla", "sla_q_2to4")
+METHODS = (
+    "original", "sla", "sla_q_2to4", "sla_q_4to8_pairwise",
+    "sla_k_2to4", "sla_k_4to8_pairwise",
+    "sla_q_2to4_share2", "sla_k_2to4_share2",
+)
 METHOD_LABELS = {
     "original": "Original attention",
     "sla": "SLA",
     "sla_q_2to4": "SLA + Q 2:4",
+    "sla_q_4to8_pairwise": "SLA + Q 4:8 pairwise",
+    "sla_k_2to4": "SLA + K 2:4",
+    "sla_k_4to8_pairwise": "SLA + K 4:8 pairwise",
+    "sla_q_2to4_share2": "SLA + Q 2:4 share-index=2",
+    "sla_k_2to4_share2": "SLA + K 2:4 share-index=2",
 }
 
 
@@ -147,7 +156,7 @@ section{{border-top:1px solid #444;padding:20px 0}} section p{{color:#bbb;max-wi
 article{{background:#1b1b1b;padding:10px;border-radius:8px}} h3{{margin:0 0 8px}} video{{width:100%}}
 @media(max-width:900px){{.videos{{grid-template-columns:1fr}}}}
 </style></head><body>
-<h1>Original vs SLA vs SLA + Q 2:4</h1>
+<h1>Original vs SLA vs SLA + Q activation sparsity</h1>
 <p>Same TurboWan2.1-T2V-1.3B checkpoint, prompt, seed 0, 4 steps, 81 frames, 480p, 16:9.</p>
 <button onclick="document.querySelectorAll('video').forEach(v=>{{v.currentTime=0;v.play()}})">Play all from start</button>
 <button onclick="document.querySelectorAll('video').forEach(v=>v.pause())">Pause all</button>

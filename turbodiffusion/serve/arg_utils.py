@@ -54,6 +54,16 @@ def parse_args() -> argparse.Namespace:
                         help="Simulate 2:4 activation sparsity on Q in the linear-attention branch")
     parser.add_argument("--sla_q_2to4", action="store_true",
                         help="Simulate 2:4 activation sparsity on SLA/SageSLA queries")
+    parser.add_argument("--sla_q_4to8_pairwise", action="store_true",
+                        help="Simulate pairwise 4:8 activation sparsity on SLA/SageSLA queries")
+    parser.add_argument("--sla_k_2to4", action="store_true",
+                        help="Simulate 2:4 activation sparsity on SLA/SageSLA keys")
+    parser.add_argument("--sla_k_4to8_pairwise", action="store_true",
+                        help="Simulate pairwise 4:8 activation sparsity on SLA/SageSLA keys")
+    parser.add_argument("--sla_q_2to4_share2", action="store_true",
+                        help="Simulate Q 2:4 with one L1-selected mask shared by two tokens")
+    parser.add_argument("--sla_k_2to4_share2", action="store_true",
+                        help="Simulate K 2:4 with one L1-selected mask shared by two tokens")
     parser.add_argument("--quant_linear", action="store_true",
                         help="Use quantized linear layers")
     parser.add_argument("--default_norm", action="store_true",

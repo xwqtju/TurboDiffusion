@@ -19,6 +19,11 @@ METHOD_ARGS = {
     "original": ["--attention_type", "original"],
     "sla": ["--attention_type", "sla"],
     "sla_q_2to4": ["--attention_type", "sla", "--sla_q_2to4"],
+    "sla_q_4to8_pairwise": ["--attention_type", "sla", "--sla_q_4to8_pairwise"],
+    "sla_k_2to4": ["--attention_type", "sla", "--sla_k_2to4"],
+    "sla_k_4to8_pairwise": ["--attention_type", "sla", "--sla_k_4to8_pairwise"],
+    "sla_q_2to4_share2": ["--attention_type", "sla", "--sla_q_2to4_share2"],
+    "sla_k_2to4_share2": ["--attention_type", "sla", "--sla_k_2to4_share2"],
 }
 
 
