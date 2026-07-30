@@ -1,0 +1,148 @@
+W0729 08:53:52.381000 82757 site-packages/torch/distributed/run.py:774] 
+W0729 08:53:52.381000 82757 site-packages/torch/distributed/run.py:774] *****************************************
+W0729 08:53:52.381000 82757 site-packages/torch/distributed/run.py:774] Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+W0729 08:53:52.381000 82757 site-packages/torch/distributed/run.py:774] *****************************************
+/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/megatron/core/optimizer/clip_grads.py:32: UserWarning: Transformer Engine and Apex are not installed. Falling back to local implementations of multi_tensor_applier, multi_tensor_l2norm, and multi_tensor_scale
+  warnings.warn(
+/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/megatron/core/optimizer/clip_grads.py:32: UserWarning: Transformer Engine and Apex are not installed. Falling back to local implementations of multi_tensor_applier, multi_tensor_l2norm, and multi_tensor_scale
+  warnings.warn(
+[07-29 08:53:56|INFO|turbodiffusion/rcm/utils/umt5.py:495:__init__] loading checkpoints/models_t5_umt5-xxl-enc-bf16.pth
+[07-29 08:53:56|INFO|turbodiffusion/rcm/utils/umt5.py:495:__init__] loading checkpoints/models_t5_umt5-xxl-enc-bf16.pth
+Traceback (most recent call last):
+  File "/home/user/桌面/workspace/TurboDiffusion/turbodiffusion/inference/wan2.2_i2v_dist_infer.py", line 265, in <module>
+    main()
+  File "/home/user/桌面/workspace/TurboDiffusion/turbodiffusion/inference/wan2.2_i2v_dist_infer.py", line 128, in main
+    text_embeddings = get_umt5_embedding(
+                      ^^^^^^^^^^^^^^^^^^^
+  File "/home/user/桌面/workspace/TurboDiffusion/turbodiffusion/rcm/utils/umt5.py", line 532, in get_umt5_embedding
+    t5_encoder = UMT5EncoderModel(text_len=max_length, device=device, checkpoint_path=checkpoint_path)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/桌面/workspace/TurboDiffusion/turbodiffusion/rcm/utils/umt5.py", line 497, in __init__
+    self.model = load_model_torch(model, checkpoint_path).to(device).eval()
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/桌面/workspace/TurboDiffusion/turbodiffusion/rcm/utils/umt5.py", line 470, in load_model_torch
+    ckpt = easy_io.load(
+           ^^^^^^^^^^^^^
+  File "/home/user/桌面/workspace/TurboDiffusion/turbodiffusion/imaginaire/utils/easy_io/easy_io.py", line 932, in load
+    obj = handler.load_from_fileobj(f, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/桌面/workspace/TurboDiffusion/turbodiffusion/imaginaire/utils/easy_io/handlers/torch_handler.py", line 28, in load_from_fileobj
+    return torch.load(file, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/serialization.py", line 1521, in load
+    return _load(
+           ^^^^^^
+  File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/serialization.py", line 2119, in _load
+    result = unpickler.load()
+             ^^^^^^^^^^^^^^^^
+  File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/_weights_only_unpickler.py", line 532, in load
+    self.append(self.persistent_load(pid))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/serialization.py", line 2083, in persistent_load
+    typed_storage = load_tensor(
+                    ^^^^^^^^^^^^
+  File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/serialization.py", line 2049, in load_tensor
+    wrap_storage = restore_location(storage, location)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/serialization.py", line 1859, in restore_location
+    return default_restore_location(storage, map_location)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/serialization.py", line 698, in default_restore_location
+    result = fn(storage, location)
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/serialization.py", line 637, in _deserialize
+    return obj.to(device=device)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/storage.py", line 291, in to
+    return _to(self, device, non_blocking)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/_utils.py", line 101, in _to
+    untyped_storage = torch.UntypedStorage(self.size(), device=device)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 32.00 MiB. GPU 0 has a total capacity of 31.36 GiB of which 36.19 MiB is free. Process 79775 has 27.45 GiB memory in use. Including non-PyTorch memory, this process has 3.53 GiB memory in use. Of the allocated memory 3.03 GiB is allocated by PyTorch, and 14.93 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+Traceback (most recent call last):
+  File "/home/user/桌面/workspace/TurboDiffusion/turbodiffusion/inference/wan2.2_i2v_dist_infer.py", line 265, in <module>
+    main()
+  File "/home/user/桌面/workspace/TurboDiffusion/turbodiffusion/inference/wan2.2_i2v_dist_infer.py", line 128, in main
+    text_embeddings = get_umt5_embedding(
+                      ^^^^^^^^^^^^^^^^^^^
+  File "/home/user/桌面/workspace/TurboDiffusion/turbodiffusion/rcm/utils/umt5.py", line 532, in get_umt5_embedding
+    t5_encoder = UMT5EncoderModel(text_len=max_length, device=device, checkpoint_path=checkpoint_path)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/桌面/workspace/TurboDiffusion/turbodiffusion/rcm/utils/umt5.py", line 497, in __init__
+    self.model = load_model_torch(model, checkpoint_path).to(device).eval()
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/桌面/workspace/TurboDiffusion/turbodiffusion/rcm/utils/umt5.py", line 470, in load_model_torch
+    ckpt = easy_io.load(
+           ^^^^^^^^^^^^^
+  File "/home/user/桌面/workspace/TurboDiffusion/turbodiffusion/imaginaire/utils/easy_io/easy_io.py", line 932, in load
+    obj = handler.load_from_fileobj(f, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/桌面/workspace/TurboDiffusion/turbodiffusion/imaginaire/utils/easy_io/handlers/torch_handler.py", line 28, in load_from_fileobj
+    return torch.load(file, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/serialization.py", line 1521, in load
+    return _load(
+           ^^^^^^
+  File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/serialization.py", line 2119, in _load
+    result = unpickler.load()
+             ^^^^^^^^^^^^^^^^
+  File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/_weights_only_unpickler.py", line 532, in load
+    self.append(self.persistent_load(pid))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/serialization.py", line 2083, in persistent_load
+    typed_storage = load_tensor(
+                    ^^^^^^^^^^^^
+  File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/serialization.py", line 2049, in load_tensor
+    wrap_storage = restore_location(storage, location)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/serialization.py", line 1859, in restore_location
+    return default_restore_location(storage, map_location)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/serialization.py", line 698, in default_restore_location
+    result = fn(storage, location)
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/serialization.py", line 637, in _deserialize
+    return obj.to(device=device)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/storage.py", line 291, in to
+    return _to(self, device, non_blocking)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/_utils.py", line 101, in _to
+    untyped_storage = torch.UntypedStorage(self.size(), device=device)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 32.00 MiB. GPU 1 has a total capacity of 31.37 GiB of which 35.12 MiB is free. Process 79776 has 26.64 GiB memory in use. Including non-PyTorch memory, this process has 4.67 GiB memory in use. Of the allocated memory 4.17 GiB is allocated by PyTorch, and 6.88 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+W0729 08:54:03.508000 82757 site-packages/torch/distributed/elastic/multiprocessing/api.py:900] Sending process 82812 closing signal SIGTERM
+E0729 08:54:03.622000 82757 site-packages/torch/distributed/elastic/multiprocessing/api.py:874] failed (exitcode: 1) local_rank: 0 (pid: 82811) of binary: /home/user/.local/envs/turbodiffusion/bin/python3.12
+Traceback (most recent call last):
+  File "/home/user/.local/envs/turbodiffusion/bin/torchrun", line 6, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py", line 357, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/distributed/run.py", line 901, in main
+    run(args)
+  File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/distributed/run.py", line 892, in run
+    elastic_launch(
+  File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/distributed/launcher/api.py", line 143, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/distributed/launcher/api.py", line 277, in launch_agent
+    raise ChildFailedError(
+torch.distributed.elastic.multiprocessing.errors.ChildFailedError: 
+============================================================
+/home/user/桌面/workspace/TurboDiffusion/turbodiffusion/inference/wan2.2_i2v_dist_infer.py FAILED
+------------------------------------------------------------
+Failures:
+  <NO_OTHER_FAILURES>
+------------------------------------------------------------
+Root Cause (first observed failure):
+[0]:
+  time      : 2026-07-29_08:54:03
+  host      : FC500T
+  rank      : 0 (local_rank: 0)
+  exitcode  : 1 (pid: 82811)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+============================================================

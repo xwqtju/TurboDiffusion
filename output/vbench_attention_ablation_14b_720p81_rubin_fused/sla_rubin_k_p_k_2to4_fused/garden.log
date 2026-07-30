@@ -1,0 +1,115 @@
+W0729 17:37:58.496000 362356 site-packages/torch/distributed/run.py:774] 
+W0729 17:37:58.496000 362356 site-packages/torch/distributed/run.py:774] *****************************************
+W0729 17:37:58.496000 362356 site-packages/torch/distributed/run.py:774] Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+W0729 17:37:58.496000 362356 site-packages/torch/distributed/run.py:774] *****************************************
+/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/megatron/core/optimizer/clip_grads.py:32: UserWarning: Transformer Engine and Apex are not installed. Falling back to local implementations of multi_tensor_applier, multi_tensor_l2norm, and multi_tensor_scale
+  warnings.warn(
+/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/megatron/core/optimizer/clip_grads.py:32: UserWarning: Transformer Engine and Apex are not installed. Falling back to local implementations of multi_tensor_applier, multi_tensor_l2norm, and multi_tensor_scale
+  warnings.warn(
+[07-29 17:38:02|INFO|turbodiffusion/rcm/utils/umt5.py:495:__init__] loading checkpoints/models_t5_umt5-xxl-enc-bf16.pth
+[07-29 17:38:02|INFO|turbodiffusion/rcm/utils/umt5.py:495:__init__] loading checkpoints/models_t5_umt5-xxl-enc-bf16.pth
+W0729 17:38:08.208000 362356 site-packages/torch/distributed/elastic/agent/server/api.py:723] Received 2 death signal, shutting down workers
+W0729 17:38:08.209000 362356 site-packages/torch/distributed/elastic/multiprocessing/api.py:900] Sending process 362394 closing signal SIGINT
+W0729 17:38:08.209000 362356 site-packages/torch/distributed/elastic/multiprocessing/api.py:900] Sending process 362395 closing signal SIGINT
+Traceback (most recent call last):
+  File "/home/user/桌面/workspace/TurboDiffusion/turbodiffusion/inference/wan2.2_i2v_dist_infer.py", line 292, in <module>
+    main()
+  File "/home/user/桌面/workspace/TurboDiffusion/turbodiffusion/inference/wan2.2_i2v_dist_infer.py", line 151, in main
+    text_embeddings = get_umt5_embedding(
+                      ^^^^^^^^^^^^^^^^^^^
+  File "/home/user/桌面/workspace/TurboDiffusion/turbodiffusion/rcm/utils/umt5.py", line 532, in get_umt5_embedding
+    t5_encoder = UMT5EncoderModel(text_len=max_length, device=device, checkpoint_path=checkpoint_path)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/桌面/workspace/TurboDiffusion/turbodiffusion/rcm/utils/umt5.py", line 497, in __init__
+    self.model = load_model_torch(model, checkpoint_path).to(device).eval()
+                 ^^^^^^Traceback (most recent call last):
+^^^^^^  File "/home/user/桌面/workspace/TurboDiffusion/turbodiffusion/inference/wan2.2_i2v_dist_infer.py", line 292, in <module>
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+      File "/home/user/桌面/workspace/TurboDiffusion/turbodiffusion/rcm/utils/umt5.py", line 470, in load_model_torch
+main()
+  File "/home/user/桌面/workspace/TurboDiffusion/turbodiffusion/inference/wan2.2_i2v_dist_infer.py", line 151, in main
+    ckpt = easy_io.load(
+      text_embeddings = get_umt5_embedding(  
+            ^ ^ ^ ^ ^ ^^ ^ ^ ^ ^ ^ ^ 
+    File "/home/user/桌面/workspace/TurboDiffusion/turbodiffusion/imaginaire/utils/easy_io/easy_io.py", line 932, in load
+   ^^^^^^^^^^^^^^^^^^    ^obj = handler.load_from_fileobj(f, **kwargs)
+
+  File "/home/user/桌面/workspace/TurboDiffusion/turbodiffusion/rcm/utils/umt5.py", line 532, in get_umt5_embedding
+          ^^    ^^t5_encoder = UMT5EncoderModel(text_len=max_length, device=device, checkpoint_path=checkpoint_path)^
+^^^^^^^ ^ ^ ^ ^ ^ ^^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^^ ^^^^^^^^^^^^^^^^
+^^  File "/home/user/桌面/workspace/TurboDiffusion/turbodiffusion/imaginaire/utils/easy_io/handlers/torch_handler.py", line 28, in load_from_fileobj
+^^^^^^^^    ^return torch.load(file, **kwargs)^
+^^^^^ ^ ^ ^ ^ ^  ^ ^ ^ ^ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^  File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/serialization.py", line 1521, in load
+^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/桌面/workspace/TurboDiffusion/turbodiffusion/rcm/utils/umt5.py", line 497, in __init__
+    return _load(
+      self.model = load_model_torch(model, checkpoint_path).to(device).eval() 
+            ^ ^ ^ ^ ^ ^ 
+    File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/serialization.py", line 2119, in _load
+     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^    ^result = unpickler.load()^
+^^^^
+    File "/home/user/桌面/workspace/TurboDiffusion/turbodiffusion/rcm/utils/umt5.py", line 470, in load_model_torch
+           ^^    ^ckpt = easy_io.load(^
+^^^ ^ ^ ^ ^ ^ ^ ^ ^ ^ 
+ ^^  File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/_weights_only_unpickler.py", line 532, in load
+^^^^^^^^^^^
+      File "/home/user/桌面/workspace/TurboDiffusion/turbodiffusion/imaginaire/utils/easy_io/easy_io.py", line 932, in load
+self.append(self.persistent_load(pid))
+                   obj = handler.load_from_fileobj(f, **kwargs) 
+^^^^^ ^ ^ ^ ^ ^ ^^ ^ ^ ^ ^^^^^^^^^^^^^^^^^^^^
+^^  File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/serialization.py", line 2083, in persistent_load
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/桌面/workspace/TurboDiffusion/turbodiffusion/imaginaire/utils/easy_io/handlers/torch_handler.py", line 28, in load_from_fileobj
+    return torch.load(file, **kwargs)    
+typed_storage = load_tensor(
+                       ^ ^ ^ ^ ^ ^ ^ ^ ^^^^^^^^^^^^^^^^^^^^^^^^^
+^^  File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/serialization.py", line 2049, in load_tensor
+^^^
+  File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/serialization.py", line 1521, in load
+        wrap_storage = restore_location(storage, location)return _load(
+
+                      ^ ^ ^ ^ ^ ^ 
+  ^  File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/serialization.py", line 2119, in _load
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/serialization.py", line 1859, in restore_location
+    result = unpickler.load()
+             ^^^^^^^^^^^    ^return default_restore_location(storage, map_location)^
+^^^
+     File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/_weights_only_unpickler.py", line 532, in load
+        ^^^^^^^    ^self.append(self.persistent_load(pid))^
+^^^^^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^  File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/serialization.py", line 698, in default_restore_location
+^^^^^
+  File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/serialization.py", line 2083, in persistent_load
+    result = fn(storage, location)
+             ^^^^^^^^^^^    ^^typed_storage = load_tensor(^
+^^ ^ ^ ^ ^ ^ 
+    File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/serialization.py", line 637, in _deserialize
+            ^^    ^return obj.to(device=device)^
+^^^^ ^ ^ ^ ^ 
+     File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/serialization.py", line 2049, in load_tensor
+   ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/storage.py", line 291, in to
+    wrap_storage = restore_location(storage, location)    
+return _to(self, device, non_blocking)
+                         ^ ^ ^ ^ ^ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^  File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/_utils.py", line 102, in _to
+^^^^^^    ^untyped_storage.copy_(self, non_blocking)
+
+  File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/serialization.py", line 1859, in restore_location
+KeyboardInterrupt
+    return default_restore_location(storage, map_location)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/serialization.py", line 698, in default_restore_location
+    result = fn(storage, location)
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/serialization.py", line 637, in _deserialize
+    return obj.to(device=device)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/storage.py", line 291, in to
+    return _to(self, device, non_blocking)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/_utils.py", line 102, in _to
+    untyped_storage.copy_(self, non_blocking)
+KeyboardInterrupt
