@@ -1,0 +1,4596 @@
+{
+  "schema_version": 1,
+  "world_size": 2,
+  "attention_type": "sla",
+  "sparsity_modes": {
+    "q_2to4": false,
+    "q_2to4_weight_norm": false,
+    "k_2to4_weight_norm": false,
+    "k_weight_norm_rpq": false,
+    "dense_fallback_layers": [],
+    "q_4to8_pairwise": false,
+    "q_2to4_share_index_2": false,
+    "k_2to4": true,
+    "k_4to8_pairwise": false,
+    "k_2to4_share_index_2": false,
+    "branch_aware_k": "none",
+    "rubin_triple_2to4": false,
+    "rubin_sparse_engine": "fused",
+    "rubin_validate_fused": false,
+    "hif4_sparse_upgrade": false,
+    "hif4_only_scope": "none",
+    "hif8_w8a8": false,
+    "sla_k_hif4_w4a4": false,
+    "norm_compensate": false
+  },
+  "high_noise": {
+    "model": "high_noise",
+    "layers": {
+      "blocks.0._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 4668,
+          "zeros_after": 2949,
+          "error_sq_sum": 56144521.0,
+          "reference_sq_sum": 245051432.0,
+          "zero_rate_before": 6.029885912698413e-06,
+          "zero_rate_after": 3.8093687996031746e-06,
+          "relative_l2_error": 0.47865772036195564
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 115241590.0,
+          "reference_sq_sum": 859685312.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.3661296221884163
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 295711.296875,
+          "reference_sq_sum": 738311.078125,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.6328696447890456
+        }
+      },
+      "blocks.1._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 2464,
+          "zeros_after": 1767,
+          "error_sq_sum": 8598906.6875,
+          "reference_sq_sum": 68531095.0,
+          "zero_rate_before": 3.18287037037037e-06,
+          "zero_rate_after": 2.282521081349206e-06,
+          "relative_l2_error": 0.35422383655120354
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 160112100.0,
+          "reference_sq_sum": 1213853792.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.3631858227610738
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 336683.1015625,
+          "reference_sq_sum": 1211756.09375,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.5271121822501785
+        }
+      },
+      "blocks.2._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 2560,
+          "zeros_after": 1868,
+          "error_sq_sum": 12208866.75,
+          "reference_sq_sum": 118114166.0,
+          "zero_rate_before": 3.306878306878307e-06,
+          "zero_rate_after": 2.4129877645502645e-06,
+          "relative_l2_error": 0.3215042238868255
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 169204968.0,
+          "reference_sq_sum": 1256674016.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.36694015273396746
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 238952.58203125,
+          "reference_sq_sum": 1019530.90625,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.4841229444915313
+        }
+      },
+      "blocks.3._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 2504,
+          "zeros_after": 1735,
+          "error_sq_sum": 6903374.5,
+          "reference_sq_sum": 135174318.0,
+          "zero_rate_before": 3.234540343915344e-06,
+          "zero_rate_after": 2.2411851025132276e-06,
+          "relative_l2_error": 0.22598708667247838
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 156252524.0,
+          "reference_sq_sum": 1154121168.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.36794916134762334
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 139634.3017578125,
+          "reference_sq_sum": 636281.8828125,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.46845866893313715
+        }
+      },
+      "blocks.4._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 2396,
+          "zeros_after": 1755,
+          "error_sq_sum": 6394488.75,
+          "reference_sq_sum": 135332714.0,
+          "zero_rate_before": 3.0950314153439154e-06,
+          "zero_rate_after": 2.2670200892857144e-06,
+          "relative_l2_error": 0.21737095736387815
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 160224504.0,
+          "reference_sq_sum": 1152147872.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.3729154330103565
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 133681.93359375,
+          "reference_sq_sum": 621874.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.4636445503197861
+        }
+      },
+      "blocks.5._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 2015,
+          "zeros_after": 1583,
+          "error_sq_sum": 6810716.25,
+          "reference_sq_sum": 163871112.0,
+          "zero_rate_before": 2.6028749173280424e-06,
+          "zero_rate_after": 2.0448392030423283e-06,
+          "relative_l2_error": 0.20386618366948894
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 157109812.0,
+          "reference_sq_sum": 1145219840.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.3703882687300196
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 88524.9453125,
+          "reference_sq_sum": 431865.234375,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.452750263174977
+        }
+      },
+      "blocks.6._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 2078,
+          "zeros_after": 1622,
+          "error_sq_sum": 8202687.875,
+          "reference_sq_sum": 211266612.0,
+          "zero_rate_before": 2.6842551256613756e-06,
+          "zero_rate_after": 2.095217427248677e-06,
+          "relative_l2_error": 0.19704374780548561
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 163777312.0,
+          "reference_sq_sum": 1188810560.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.37116801335855515
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 51443.98828125,
+          "reference_sq_sum": 333128.625,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.39297175751401436
+        }
+      },
+      "blocks.7._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 2083,
+          "zeros_after": 1574,
+          "error_sq_sum": 8428023.875,
+          "reference_sq_sum": 266121360.0,
+          "zero_rate_before": 2.6907138723544975e-06,
+          "zero_rate_after": 2.033213458994709e-06,
+          "relative_l2_error": 0.17796025176985256
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 167731976.0,
+          "reference_sq_sum": 1229331104.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.3693801017617216
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 34198.251953125,
+          "reference_sq_sum": 282773.734375,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.34776223648790255
+        }
+      },
+      "blocks.8._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 2262,
+          "zeros_after": 1787,
+          "error_sq_sum": 8532394.25,
+          "reference_sq_sum": 266313216.0,
+          "zero_rate_before": 2.921937003968254e-06,
+          "zero_rate_after": 2.3083560681216933e-06,
+          "relative_l2_error": 0.1789942572699334
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 166550268.0,
+          "reference_sq_sum": 1235390976.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.36717276129143533
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 36512.34619140625,
+          "reference_sq_sum": 323381.7890625,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.3360176503034264
+        }
+      },
+      "blocks.9._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 2294,
+          "zeros_after": 1805,
+          "error_sq_sum": 10041598.0,
+          "reference_sq_sum": 292228080.0,
+          "zero_rate_before": 2.963272982804233e-06,
+          "zero_rate_after": 2.331607556216931e-06,
+          "relative_l2_error": 0.18537042395699352
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 170921988.0,
+          "reference_sq_sum": 1275591424.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.3660523272905248
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 29664.38134765625,
+          "reference_sq_sum": 295848.8203125,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.3166523582988901
+        }
+      },
+      "blocks.10._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 2603,
+          "zeros_after": 2022,
+          "error_sq_sum": 11335543.0,
+          "reference_sq_sum": 302051264.0,
+          "zero_rate_before": 3.3624235284391535e-06,
+          "zero_rate_after": 2.6119171626984127e-06,
+          "relative_l2_error": 0.19372284374451776
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 168745312.0,
+          "reference_sq_sum": 1274022720.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.3639378890180121
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 23473.79736328125,
+          "reference_sq_sum": 279816.40625,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.28963769882352786
+        }
+      },
+      "blocks.11._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 2371,
+          "zeros_after": 1939,
+          "error_sq_sum": 9944392.75,
+          "reference_sq_sum": 295423784.0,
+          "zero_rate_before": 3.062737681878307e-06,
+          "zero_rate_after": 2.5047019675925927e-06,
+          "relative_l2_error": 0.18347056815035404
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 172585600.0,
+          "reference_sq_sum": 1282785632.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.36679654388279365
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 23388.97265625,
+          "reference_sq_sum": 283510.0703125,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.28722439824216467
+        }
+      },
+      "blocks.12._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 2058,
+          "zeros_after": 1824,
+          "error_sq_sum": 13023355.5,
+          "reference_sq_sum": 376874088.0,
+          "zero_rate_before": 2.658420138888889e-06,
+          "zero_rate_after": 2.3561507936507937e-06,
+          "relative_l2_error": 0.18589311656666466
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 183770368.0,
+          "reference_sq_sum": 1372483392.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.36591835388692495
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 28742.47021484375,
+          "reference_sq_sum": 324494.96875,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.2976172238029437
+        }
+      },
+      "blocks.13._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 2204,
+          "zeros_after": 1751,
+          "error_sq_sum": 13273496.25,
+          "reference_sq_sum": 357782480.0,
+          "zero_rate_before": 2.847015542328042e-06,
+          "zero_rate_after": 2.261853091931217e-06,
+          "relative_l2_error": 0.19261190681709517
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 187588300.0,
+          "reference_sq_sum": 1382437216.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.36836653203176944
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 52257.5693359375,
+          "reference_sq_sum": 421492.078125,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.3521112446492089
+        }
+      },
+      "blocks.14._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 1908,
+          "zeros_after": 1624,
+          "error_sq_sum": 15647143.5,
+          "reference_sq_sum": 363615144.0,
+          "zero_rate_before": 2.464657738095238e-06,
+          "zero_rate_after": 2.097800925925926e-06,
+          "relative_l2_error": 0.20744193337754807
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 184478716.0,
+          "reference_sq_sum": 1373048480.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.36654744594930494
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 21630.39111328125,
+          "reference_sq_sum": 297043.6953125,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.2698497478756684
+        }
+      },
+      "blocks.15._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 1769,
+          "zeros_after": 1374,
+          "error_sq_sum": 12570255.5,
+          "reference_sq_sum": 291386976.0,
+          "zero_rate_before": 2.285104580026455e-06,
+          "zero_rate_after": 1.7748635912698413e-06,
+          "relative_l2_error": 0.2077002333079604
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 177303844.0,
+          "reference_sq_sum": 1323180224.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.366057723886548
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 60555.994140625,
+          "reference_sq_sum": 444633.21875,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.36904354735487016
+        }
+      },
+      "blocks.16._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 1736,
+          "zeros_after": 1437,
+          "error_sq_sum": 22792665.5,
+          "reference_sq_sum": 402673288.0,
+          "zero_rate_before": 2.242476851851852e-06,
+          "zero_rate_after": 1.8562437996031746e-06,
+          "relative_l2_error": 0.2379146295818567
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 186303288.0,
+          "reference_sq_sum": 1469166880.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.3561022315060348
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 148037.08203125,
+          "reference_sq_sum": 594728.890625,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.4989140565002423
+        }
+      },
+      "blocks.17._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 1947,
+          "zeros_after": 1683,
+          "error_sq_sum": 22670748.0,
+          "reference_sq_sum": 456441536.0,
+          "zero_rate_before": 2.515035962301587e-06,
+          "zero_rate_after": 2.174014136904762e-06,
+          "relative_l2_error": 0.22286421790104038
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 189587664.0,
+          "reference_sq_sum": 1398509568.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.3681902779076465
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 54814.7744140625,
+          "reference_sq_sum": 446471.1484375,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.350390333032738
+        }
+      },
+      "blocks.18._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 2061,
+          "zeros_after": 1735,
+          "error_sq_sum": 26000627.0,
+          "reference_sq_sum": 458828744.0,
+          "zero_rate_before": 2.662295386904762e-06,
+          "zero_rate_after": 2.2411851025132276e-06,
+          "relative_l2_error": 0.23804913184673707
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 1,
+          "zeros_after": 387072000,
+          "error_sq_sum": 191763872.0,
+          "reference_sq_sum": 1443769632.0,
+          "zero_rate_before": 1.2917493386243386e-09,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.36444705380483705
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 149634.6640625,
+          "reference_sq_sum": 628624.890625,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.4878882061764728
+        }
+      },
+      "blocks.19._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 1895,
+          "zeros_after": 1714,
+          "error_sq_sum": 22970735.5,
+          "reference_sq_sum": 456499416.0,
+          "zero_rate_before": 2.4478649966931215e-06,
+          "zero_rate_after": 2.2140583664021163e-06,
+          "relative_l2_error": 0.224319659678905
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 189546040.0,
+          "reference_sq_sum": 1404018560.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.3674268870750202
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 30416.6650390625,
+          "reference_sq_sum": 349658.7890625,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.29493993010292396
+        }
+      },
+      "blocks.20._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 2158,
+          "zeros_after": 1773,
+          "error_sq_sum": 16426966.25,
+          "reference_sq_sum": 280279344.0,
+          "zero_rate_before": 2.7875950727513226e-06,
+          "zero_rate_after": 2.2902715773809523e-06,
+          "relative_l2_error": 0.24209350395172022
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 172052372.0,
+          "reference_sq_sum": 1257572544.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.36988252074230915
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 23235.72705078125,
+          "reference_sq_sum": 282231.7265625,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.28692951008927486
+        }
+      },
+      "blocks.21._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 2165,
+          "zeros_after": 1682,
+          "error_sq_sum": 21346669.0,
+          "reference_sq_sum": 313103520.0,
+          "zero_rate_before": 2.7966373181216933e-06,
+          "zero_rate_after": 2.1727223875661377e-06,
+          "relative_l2_error": 0.26110854393720845
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 175709100.0,
+          "reference_sq_sum": 1303702016.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.3671199272067351
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 54418.478515625,
+          "reference_sq_sum": 392019.3984375,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.3725798972881566
+        }
+      },
+      "blocks.22._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 1762,
+          "zeros_after": 1347,
+          "error_sq_sum": 25593059.0,
+          "reference_sq_sum": 461908568.0,
+          "zero_rate_before": 2.2760623346560847e-06,
+          "zero_rate_after": 1.739986359126984e-06,
+          "relative_l2_error": 0.2353873338772751
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 186378096.0,
+          "reference_sq_sum": 1366926496.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.36925369893976545
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 181926.248046875,
+          "reference_sq_sum": 734463.3359375,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.4976942474523213
+        }
+      },
+      "blocks.23._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 2219,
+          "zeros_after": 1854,
+          "error_sq_sum": 21969486.5,
+          "reference_sq_sum": 426749680.0,
+          "zero_rate_before": 2.8663917824074074e-06,
+          "zero_rate_after": 2.394903273809524e-06,
+          "relative_l2_error": 0.22689417735718395
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 171369144.0,
+          "reference_sq_sum": 1272096416.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.36703400205254233
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 77444.521484375,
+          "reference_sq_sum": 403068.07421875,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.4383350007430948
+        }
+      },
+      "blocks.24._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 1890,
+          "zeros_after": 1484,
+          "error_sq_sum": 22156816.5,
+          "reference_sq_sum": 438681560.0,
+          "zero_rate_before": 2.44140625e-06,
+          "zero_rate_after": 1.9169560185185184e-06,
+          "relative_l2_error": 0.22473928294658796
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 167026644.0,
+          "reference_sq_sum": 1239337408.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.3671115921295831
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 60384.439453125,
+          "reference_sq_sum": 345589.45703125,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.4180057704309737
+        }
+      },
+      "blocks.25._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 1820,
+          "zeros_after": 1512,
+          "error_sq_sum": 24581066.0,
+          "reference_sq_sum": 441084792.0,
+          "zero_rate_before": 2.3509837962962965e-06,
+          "zero_rate_after": 1.953125e-06,
+          "relative_l2_error": 0.23606919243546068
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 176168328.0,
+          "reference_sq_sum": 1291171296.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.3693788160179745
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 26570.2607421875,
+          "reference_sq_sum": 290332.74609375,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.3025170782116149
+        }
+      },
+      "blocks.26._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 2115,
+          "zeros_after": 1639,
+          "error_sq_sum": 25810155.5,
+          "reference_sq_sum": 486003472.0,
+          "zero_rate_before": 2.732049851190476e-06,
+          "zero_rate_after": 2.117177166005291e-06,
+          "relative_l2_error": 0.23044942275024047
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 172566784.0,
+          "reference_sq_sum": 1255446944.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.37074851556714417
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 67098.798828125,
+          "reference_sq_sum": 414216.8671875,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.402479238858081
+        }
+      },
+      "blocks.27._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 2184,
+          "zeros_after": 1727,
+          "error_sq_sum": 19880973.5,
+          "reference_sq_sum": 363904968.0,
+          "zero_rate_before": 2.8211805555555554e-06,
+          "zero_rate_after": 2.2308511078042327e-06,
+          "relative_l2_error": 0.23373558202494946
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 163358928.0,
+          "reference_sq_sum": 1203174624.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.36847421776007394
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 35701.404296875,
+          "reference_sq_sum": 306844.0625,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.3411016243853845
+        }
+      },
+      "blocks.28._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 2169,
+          "zeros_after": 1604,
+          "error_sq_sum": 25672479.0,
+          "reference_sq_sum": 466679288.0,
+          "zero_rate_before": 2.8018043154761906e-06,
+          "zero_rate_after": 2.071965939153439e-06,
+          "relative_l2_error": 0.23454416895139138
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 170263816.0,
+          "reference_sq_sum": 1298763424.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.3620730135032692
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 99078.31494140625,
+          "reference_sq_sum": 406961.0234375,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.493415624215397
+        }
+      },
+      "blocks.29._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 2089,
+          "zeros_after": 1539,
+          "error_sq_sum": 33671408.0,
+          "reference_sq_sum": 441089080.0,
+          "zero_rate_before": 2.6984643683862432e-06,
+          "zero_rate_after": 1.988002232142857e-06,
+          "relative_l2_error": 0.27629147538304066
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 175116808.0,
+          "reference_sq_sum": 1274913312.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.3706155082883193
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 155572.25390625,
+          "reference_sq_sum": 696468.9921875,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.4726233552280869
+        }
+      },
+      "blocks.30._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 2408,
+          "zeros_after": 1870,
+          "error_sq_sum": 20070696.0,
+          "reference_sq_sum": 345337296.0,
+          "zero_rate_before": 3.1105324074074072e-06,
+          "zero_rate_after": 2.4155712632275133e-06,
+          "relative_l2_error": 0.2410790516627451
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 160136048.0,
+          "reference_sq_sum": 1181195360.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.3681999176422197
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 34111.26416015625,
+          "reference_sq_sum": 304523.8984375,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.334686516929748
+        }
+      },
+      "blocks.31._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 2118,
+          "zeros_after": 1629,
+          "error_sq_sum": 28346262.0,
+          "reference_sq_sum": 454246848.0,
+          "zero_rate_before": 2.735925099206349e-06,
+          "zero_rate_after": 2.1042596726190474e-06,
+          "relative_l2_error": 0.24980546616692995
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 166579312.0,
+          "reference_sq_sum": 1213433600.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.37051220946031355
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 57472.1005859375,
+          "reference_sq_sum": 358056.828125,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.40063838387949374
+        }
+      },
+      "blocks.32._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 1809,
+          "zeros_after": 1394,
+          "error_sq_sum": 29899042.5,
+          "reference_sq_sum": 499819312.0,
+          "zero_rate_before": 2.3367745535714285e-06,
+          "zero_rate_after": 1.800698578042328e-06,
+          "relative_l2_error": 0.2445806664574619
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 163823432.0,
+          "reference_sq_sum": 1190997184.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.37087934102093606
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 103804.064453125,
+          "reference_sq_sum": 518032.9140625,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.4476396033259859
+        }
+      },
+      "blocks.33._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 2457,
+          "zeros_after": 1642,
+          "error_sq_sum": 53023730.0,
+          "reference_sq_sum": 706895320.0,
+          "zero_rate_before": 3.173828125e-06,
+          "zero_rate_after": 2.121052414021164e-06,
+          "relative_l2_error": 0.27387827537710746
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 159200786.0,
+          "reference_sq_sum": 2324316160.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.2617128235420723
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 1140,
+          "zeros_after": 387072300,
+          "error_sq_sum": 301661.568359375,
+          "reference_sq_sum": 1047470.3671875,
+          "zero_rate_before": 1.4725942460317461e-06,
+          "zero_rate_after": 0.5000003875248016,
+          "relative_l2_error": 0.5366475110813104
+        }
+      },
+      "blocks.34._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 2043,
+          "zeros_after": 1464,
+          "error_sq_sum": 50430163.5,
+          "reference_sq_sum": 520884648.0,
+          "zero_rate_before": 2.6390438988095236e-06,
+          "zero_rate_after": 1.8911210317460318e-06,
+          "relative_l2_error": 0.31115329850085527
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 172633888.0,
+          "reference_sq_sum": 1557254992.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.3329531744941061
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 270913.80859375,
+          "reference_sq_sum": 901262.3125,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.5482642969298911
+        }
+      },
+      "blocks.35._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 1886,
+          "zeros_after": 1366,
+          "error_sq_sum": 22718669.0,
+          "reference_sq_sum": 436535872.0,
+          "zero_rate_before": 2.4362392526455028e-06,
+          "zero_rate_after": 1.7645295965608466e-06,
+          "relative_l2_error": 0.2281295130179161
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 154258072.0,
+          "reference_sq_sum": 1130170464.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.36944685416821954
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 47705.8974609375,
+          "reference_sq_sum": 270925.2421875,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.4196249476258901
+        }
+      },
+      "blocks.36._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 2439,
+          "zeros_after": 1681,
+          "error_sq_sum": 28026435.75,
+          "reference_sq_sum": 398360020.0,
+          "zero_rate_before": 3.150576636904762e-06,
+          "zero_rate_after": 2.171430638227513e-06,
+          "relative_l2_error": 0.26524430148279593
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 146709982.0,
+          "reference_sq_sum": 1056780672.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.3725953246862306
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 204687.125,
+          "reference_sq_sum": 663717.46875,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.5553332010413207
+        }
+      },
+      "blocks.37._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 2708,
+          "zeros_after": 1960,
+          "error_sq_sum": 24298230.75,
+          "reference_sq_sum": 554094032.0,
+          "zero_rate_before": 3.498057208994709e-06,
+          "zero_rate_after": 2.5318287037037036e-06,
+          "relative_l2_error": 0.20940911903971152
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 134028286.0,
+          "reference_sq_sum": 984772800.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.36891830920451923
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 59795.1298828125,
+          "reference_sq_sum": 303637.0703125,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.44376751812968734
+        }
+      },
+      "blocks.38._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 3520,
+          "zeros_after": 2278,
+          "error_sq_sum": 47586520.5,
+          "reference_sq_sum": 933972584.0,
+          "zero_rate_before": 4.546957671957672e-06,
+          "zero_rate_after": 2.9426049933862434e-06,
+          "relative_l2_error": 0.22572253097235795
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 192945416.0,
+          "reference_sq_sum": 3256942640.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.24339529430643217
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 273,
+          "zeros_after": 387072020,
+          "error_sq_sum": 294911.576171875,
+          "reference_sq_sum": 923053.6015625,
+          "zero_rate_before": 3.5264756944444443e-07,
+          "zero_rate_after": 0.5000000258349868,
+          "relative_l2_error": 0.5652394297120508
+        }
+      },
+      "blocks.39._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 4941,
+          "zeros_after": 3412,
+          "error_sq_sum": 32061813.0,
+          "reference_sq_sum": 447636016.0,
+          "zero_rate_before": 6.382533482142857e-06,
+          "zero_rate_after": 4.4074487433862435e-06,
+          "relative_l2_error": 0.26762798698520024
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 142100054.0,
+          "reference_sq_sum": 1295454208.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.33119676678374593
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 150690.08203125,
+          "reference_sq_sum": 624044.40625,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.4913993609080192
+        }
+      }
+    }
+  },
+  "low_noise": {
+    "model": "low_noise",
+    "layers": {
+      "blocks.0._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 4814,
+          "zeros_after": 2962,
+          "error_sq_sum": 47432491.5,
+          "reference_sq_sum": 354321792.0,
+          "zero_rate_before": 6.218481316137566e-06,
+          "zero_rate_after": 3.826161541005291e-06,
+          "relative_l2_error": 0.3658803087598286
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 126561728.0,
+          "reference_sq_sum": 933985920.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.36811289689557564
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 366763.2890625,
+          "reference_sq_sum": 954083.125,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.6200116102718286
+        }
+      },
+      "blocks.1._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 1959,
+          "zeros_after": 1320,
+          "error_sq_sum": 5609982.75,
+          "reference_sq_sum": 70022652.0,
+          "zero_rate_before": 2.5305369543650794e-06,
+          "zero_rate_after": 1.705109126984127e-06,
+          "relative_l2_error": 0.2830489091217881
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 161771976.0,
+          "reference_sq_sum": 1223073024.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.36368505211010355
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 343783.0,
+          "reference_sq_sum": 1193320.03125,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.5367397173512347
+        }
+      },
+      "blocks.2._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 2021,
+          "zeros_after": 1515,
+          "error_sq_sum": 9973647.5,
+          "reference_sq_sum": 113531564.0,
+          "zero_rate_before": 2.6106254133597885e-06,
+          "zero_rate_after": 1.957000248015873e-06,
+          "relative_l2_error": 0.2963935149211843
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 168411712.0,
+          "reference_sq_sum": 1270689280.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.3640545491947298
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 265649.4765625,
+          "reference_sq_sum": 1029747.15625,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.5079128279694136
+        }
+      },
+      "blocks.3._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 2096,
+          "zeros_after": 1467,
+          "error_sq_sum": 6512806.25,
+          "reference_sq_sum": 144657192.0,
+          "zero_rate_before": 2.707506613756614e-06,
+          "zero_rate_after": 1.8949962797619047e-06,
+          "relative_l2_error": 0.21218469948129798
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 157174092.0,
+          "reference_sq_sum": 1173790400.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.3659276304523675
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 178930.5859375,
+          "reference_sq_sum": 682038.9921875,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.5121977779536054
+        }
+      },
+      "blocks.4._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 2019,
+          "zeros_after": 1395,
+          "error_sq_sum": 8216428.75,
+          "reference_sq_sum": 166206044.0,
+          "zero_rate_before": 2.6080419146825396e-06,
+          "zero_rate_after": 1.8019903273809525e-06,
+          "relative_l2_error": 0.2223402760124939
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 162708164.0,
+          "reference_sq_sum": 1179994944.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.3713339001424499
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 204826.0390625,
+          "reference_sq_sum": 786122.75,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.5104431745527439
+        }
+      },
+      "blocks.5._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 1797,
+          "zeros_after": 1342,
+          "error_sq_sum": 5736800.625,
+          "reference_sq_sum": 173863508.0,
+          "zero_rate_before": 2.3212735615079367e-06,
+          "zero_rate_after": 1.7335276124338624e-06,
+          "relative_l2_error": 0.18164801626208335
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 158509996.0,
+          "reference_sq_sum": 1151708320.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.37098561949730613
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 99385.8828125,
+          "reference_sq_sum": 421923.71875,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.48533921097483385
+        }
+      },
+      "blocks.6._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 1799,
+          "zeros_after": 1258,
+          "error_sq_sum": 6172089.0,
+          "reference_sq_sum": 221420276.0,
+          "zero_rate_before": 2.323857060185185e-06,
+          "zero_rate_after": 1.625020667989418e-06,
+          "relative_l2_error": 0.16695806242825792
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 166375192.0,
+          "reference_sq_sum": 1207693728.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.3711640281848415
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 84039.7109375,
+          "reference_sq_sum": 381096.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.4695967469589681
+        }
+      },
+      "blocks.7._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 1381,
+          "zeros_after": 1042,
+          "error_sq_sum": 7053315.875,
+          "reference_sq_sum": 257904532.0,
+          "zero_rate_before": 1.7839058366402116e-06,
+          "zero_rate_after": 1.3460028108465609e-06,
+          "relative_l2_error": 0.16537398053146024
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 170830328.0,
+          "reference_sq_sum": 1245874080.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.37029292312902085
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 45691.5966796875,
+          "reference_sq_sum": 291725.8984375,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.39575888546117316
+        }
+      },
+      "blocks.8._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 1633,
+          "zeros_after": 1290,
+          "error_sq_sum": 8495602.5,
+          "reference_sq_sum": 285751200.0,
+          "zero_rate_before": 2.109426669973545e-06,
+          "zero_rate_after": 1.6663566468253969e-06,
+          "relative_l2_error": 0.172426121961942
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 168981128.0,
+          "reference_sq_sum": 1254836512.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.36696574731338455
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 66798.0205078125,
+          "reference_sq_sum": 385491.40625,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.4162693606715375
+        }
+      },
+      "blocks.9._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 1633,
+          "zeros_after": 1303,
+          "error_sq_sum": 9046857.75,
+          "reference_sq_sum": 290940888.0,
+          "zero_rate_before": 2.109426669973545e-06,
+          "zero_rate_after": 1.6831493882275133e-06,
+          "relative_l2_error": 0.17633823957181974
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 173520940.0,
+          "reference_sq_sum": 1275306368.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.36886604711211257
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 44054.4296875,
+          "reference_sq_sum": 303230.7734375,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.38116073423858055
+        }
+      },
+      "blocks.10._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 1790,
+          "zeros_after": 1379,
+          "error_sq_sum": 9960585.0,
+          "reference_sq_sum": 313651752.0,
+          "zero_rate_before": 2.312231316137566e-06,
+          "zero_rate_after": 1.781322337962963e-06,
+          "relative_l2_error": 0.17820445793645637
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 170453316.0,
+          "reference_sq_sum": 1273424288.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.3658610384713252
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 30470.16552734375,
+          "reference_sq_sum": 270815.703125,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.33542890557733657
+        }
+      },
+      "blocks.11._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 1584,
+          "zeros_after": 1286,
+          "error_sq_sum": 8667356.5,
+          "reference_sq_sum": 286064020.0,
+          "zero_rate_before": 2.0461309523809525e-06,
+          "zero_rate_after": 1.6611896494708994e-06,
+          "relative_l2_error": 0.17406510296199273
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 176122376.0,
+          "reference_sq_sum": 1292782880.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.3691003625275696
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 35747.39404296875,
+          "reference_sq_sum": 299131.6953125,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.3456933121039511
+        }
+      },
+      "blocks.12._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 1567,
+          "zeros_after": 1213,
+          "error_sq_sum": 10631478.25,
+          "reference_sq_sum": 362510016.0,
+          "zero_rate_before": 2.0241712136243388e-06,
+          "zero_rate_after": 1.5668919477513228e-06,
+          "relative_l2_error": 0.1712524614005332
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 187664696.0,
+          "reference_sq_sum": 1388441920.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.3676439563705135
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 52734.716796875,
+          "reference_sq_sum": 378985.5546875,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.37302417678018324
+        }
+      },
+      "blocks.13._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 1521,
+          "zeros_after": 1277,
+          "error_sq_sum": 11849219.25,
+          "reference_sq_sum": 308767864.0,
+          "zero_rate_before": 1.964750744047619e-06,
+          "zero_rate_after": 1.6495639054232805e-06,
+          "relative_l2_error": 0.1958974672272485
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 198878308.0,
+          "reference_sq_sum": 1467309248.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.36815684608750027
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 98855.919921875,
+          "reference_sq_sum": 581272.265625,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.41239324222410995
+        }
+      },
+      "blocks.14._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 1361,
+          "zeros_after": 1108,
+          "error_sq_sum": 11546303.5,
+          "reference_sq_sum": 290043400.0,
+          "zero_rate_before": 1.7580708498677249e-06,
+          "zero_rate_after": 1.4312582671957672e-06,
+          "relative_l2_error": 0.1995216330377877
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 190357704.0,
+          "reference_sq_sum": 1396796800.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.36916337964948365
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 35724.03955078125,
+          "reference_sq_sum": 329628.171875,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.329206286462527
+        }
+      },
+      "blocks.15._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 1295,
+          "zeros_after": 1006,
+          "error_sq_sum": 10881617.0,
+          "reference_sq_sum": 222794412.0,
+          "zero_rate_before": 1.6728153935185186e-06,
+          "zero_rate_after": 1.2994998346560847e-06,
+          "relative_l2_error": 0.22100116905865863
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 189571644.0,
+          "reference_sq_sum": 1418546304.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.365565270349704
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 122982.0625,
+          "reference_sq_sum": 667236.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.4293200299919839
+        }
+      },
+      "blocks.16._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 1225,
+          "zeros_after": 965,
+          "error_sq_sum": 17038570.75,
+          "reference_sq_sum": 270383636.0,
+          "zero_rate_before": 1.5823929398148148e-06,
+          "zero_rate_after": 1.2465381117724868e-06,
+          "relative_l2_error": 0.2510304351965229
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 198341000.0,
+          "reference_sq_sum": 1560099104.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.356557975787776
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 197089.890625,
+          "reference_sq_sum": 715678.84375,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.5247749363794291
+        }
+      },
+      "blocks.17._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 1468,
+          "zeros_after": 1239,
+          "error_sq_sum": 17871744.75,
+          "reference_sq_sum": 315282980.0,
+          "zero_rate_before": 1.896288029100529e-06,
+          "zero_rate_after": 1.6004774305555556e-06,
+          "relative_l2_error": 0.2380856461370724
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 195674936.0,
+          "reference_sq_sum": 1447893888.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.36762008641983807
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 108413.2734375,
+          "reference_sq_sum": 541679.5234375,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.44737325716363857
+        }
+      },
+      "blocks.18._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 1515,
+          "zeros_after": 1321,
+          "error_sq_sum": 24520243.5,
+          "reference_sq_sum": 334866720.0,
+          "zero_rate_before": 1.957000248015873e-06,
+          "zero_rate_after": 1.7064008763227514e-06,
+          "relative_l2_error": 0.2705991295168179
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 200815188.0,
+          "reference_sq_sum": 1517854912.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.36373337125880173
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 186052.306640625,
+          "reference_sq_sum": 741145.3125,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.5010324405903253
+        }
+      },
+      "blocks.19._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 1612,
+          "zeros_after": 1366,
+          "error_sq_sum": 18278271.5,
+          "reference_sq_sum": 297672400.0,
+          "zero_rate_before": 2.0822999338624337e-06,
+          "zero_rate_after": 1.7645295965608466e-06,
+          "relative_l2_error": 0.24779827423951897
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 193300448.0,
+          "reference_sq_sum": 1432977184.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.36727958792598814
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 46374.619140625,
+          "reference_sq_sum": 366842.265625,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.35554984566798525
+        }
+      },
+      "blocks.20._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 1959,
+          "zeros_after": 1673,
+          "error_sq_sum": 14332536.5,
+          "reference_sq_sum": 222517672.0,
+          "zero_rate_before": 2.5305369543650794e-06,
+          "zero_rate_after": 2.1610966435185186e-06,
+          "relative_l2_error": 0.25379278668635785
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 175075736.0,
+          "reference_sq_sum": 1273749568.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.3707412889589851
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 32041.32958984375,
+          "reference_sq_sum": 285974.53125,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.3347276482652696
+        }
+      },
+      "blocks.21._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 1776,
+          "zeros_after": 1364,
+          "error_sq_sum": 19154376.0,
+          "reference_sq_sum": 195560132.0,
+          "zero_rate_before": 2.2941468253968253e-06,
+          "zero_rate_after": 1.761946097883598e-06,
+          "relative_l2_error": 0.312963610460028
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 180662680.0,
+          "reference_sq_sum": 1349759968.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.36585243716712973
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 83955.625,
+          "reference_sq_sum": 458695.0390625,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.4278217678268679
+        }
+      },
+      "blocks.22._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 1335,
+          "zeros_after": 1066,
+          "error_sq_sum": 16344200.0,
+          "reference_sq_sum": 263421028.0,
+          "zero_rate_before": 1.724485367063492e-06,
+          "zero_rate_after": 1.3770047949735449e-06,
+          "relative_l2_error": 0.24909018424580784
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 198941868.0,
+          "reference_sq_sum": 1471701024.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.3676658556455638
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 245088.09765625,
+          "reference_sq_sum": 877115.671875,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.5286067141019568
+        }
+      },
+      "blocks.23._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 1606,
+          "zeros_after": 1394,
+          "error_sq_sum": 15241621.5,
+          "reference_sq_sum": 230863472.0,
+          "zero_rate_before": 2.0745494378306876e-06,
+          "zero_rate_after": 1.800698578042328e-06,
+          "relative_l2_error": 0.25694370066953176
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 178574420.0,
+          "reference_sq_sum": 1333204832.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.3659832290697764
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 75896.41455078125,
+          "reference_sq_sum": 407454.8515625,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.4315895127935538
+        }
+      },
+      "blocks.24._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 1537,
+          "zeros_after": 1363,
+          "error_sq_sum": 15272060.5,
+          "reference_sq_sum": 265736228.0,
+          "zero_rate_before": 1.9854187334656087e-06,
+          "zero_rate_after": 1.7606543485449735e-06,
+          "relative_l2_error": 0.2397305793120731
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 171899896.0,
+          "reference_sq_sum": 1281010112.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.36632075699259736
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 77817.93310546875,
+          "reference_sq_sum": 367635.1171875,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.46007787754549473
+        }
+      },
+      "blocks.25._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 1485,
+          "zeros_after": 1169,
+          "error_sq_sum": 14277529.5,
+          "reference_sq_sum": 218651936.0,
+          "zero_rate_before": 1.918247767857143e-06,
+          "zero_rate_after": 1.5100549768518518e-06,
+          "relative_l2_error": 0.25553469213509455
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 179076704.0,
+          "reference_sq_sum": 1307287104.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.3701127596559179
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 33159.9130859375,
+          "reference_sq_sum": 298442.12890625,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.33333170759105946
+        }
+      },
+      "blocks.26._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 1454,
+          "zeros_after": 1174,
+          "error_sq_sum": 13150347.5,
+          "reference_sq_sum": 233498148.0,
+          "zero_rate_before": 1.8782035383597885e-06,
+          "zero_rate_after": 1.5165137235449735e-06,
+          "relative_l2_error": 0.23731593162412085
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 181925260.0,
+          "reference_sq_sum": 1319816160.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.3712699344269491
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 103856.546875,
+          "reference_sq_sum": 507303.0546875,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.4524631353425148
+        }
+      },
+      "blocks.27._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 1842,
+          "zeros_after": 1363,
+          "error_sq_sum": 13487293.5,
+          "reference_sq_sum": 197896880.0,
+          "zero_rate_before": 2.3794022817460316e-06,
+          "zero_rate_after": 1.7606543485449735e-06,
+          "relative_l2_error": 0.26106156102485206
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 171375112.0,
+          "reference_sq_sum": 1259580512.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.3688594458520566
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 52290.189453125,
+          "reference_sq_sum": 352928.640625,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.3849166132983525
+        }
+      },
+      "blocks.28._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 1792,
+          "zeros_after": 1295,
+          "error_sq_sum": 13881750.25,
+          "reference_sq_sum": 212499984.0,
+          "zero_rate_before": 2.3148148148148148e-06,
+          "zero_rate_after": 1.6728153935185186e-06,
+          "relative_l2_error": 0.25558929642703526
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 177501368.0,
+          "reference_sq_sum": 1353616768.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.3621203983676584
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 111631.2958984375,
+          "reference_sq_sum": 442586.75,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.5022197403426959
+        }
+      },
+      "blocks.29._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 1601,
+          "zeros_after": 1167,
+          "error_sq_sum": 18311941.5,
+          "reference_sq_sum": 236547300.0,
+          "zero_rate_before": 2.068090691137566e-06,
+          "zero_rate_after": 1.5074714781746032e-06,
+          "relative_l2_error": 0.27823271811436445
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 183401920.0,
+          "reference_sq_sum": 1348627616.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.3687702813875489
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 192765.3984375,
+          "reference_sq_sum": 855046.125,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.47480990325093053
+        }
+      },
+      "blocks.30._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 2070,
+          "zeros_after": 1546,
+          "error_sq_sum": 9520068.75,
+          "reference_sq_sum": 167229204.0,
+          "zero_rate_before": 2.673921130952381e-06,
+          "zero_rate_after": 1.9970444775132274e-06,
+          "relative_l2_error": 0.23859645187524908
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 166527120.0,
+          "reference_sq_sum": 1218614144.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.3696658894673953
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 58035.1767578125,
+          "reference_sq_sum": 365724.0078125,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.39835375982644794
+        }
+      },
+      "blocks.31._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 1738,
+          "zeros_after": 1254,
+          "error_sq_sum": 10866476.75,
+          "reference_sq_sum": 197316552.0,
+          "zero_rate_before": 2.2450603505291007e-06,
+          "zero_rate_after": 1.6198536706349207e-06,
+          "relative_l2_error": 0.2346727262469258
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 178318448.0,
+          "reference_sq_sum": 1275161280.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.37395175804848557
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 92191.734375,
+          "reference_sq_sum": 471655.9921875,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.4421130298149364
+        }
+      },
+      "blocks.32._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 1745,
+          "zeros_after": 1207,
+          "error_sq_sum": 7514105.3125,
+          "reference_sq_sum": 207611392.0,
+          "zero_rate_before": 2.254102595899471e-06,
+          "zero_rate_after": 1.5591414517195767e-06,
+          "relative_l2_error": 0.19024491111773753
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 179055208.0,
+          "reference_sq_sum": 1295751136.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.37173433782783694
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 156015.9296875,
+          "reference_sq_sum": 651472.921875,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.4893688111412043
+        }
+      },
+      "blocks.33._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 1800,
+          "zeros_after": 1154,
+          "error_sq_sum": 22141812.5,
+          "reference_sq_sum": 343284320.0,
+          "zero_rate_before": 2.3251488095238097e-06,
+          "zero_rate_after": 1.4906787367724868e-06,
+          "relative_l2_error": 0.25396835207010965
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 155363746.0,
+          "reference_sq_sum": 7593545568.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.14303836599421824
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 1204471,
+          "zeros_after": 387620892,
+          "error_sq_sum": 380379.30859375,
+          "reference_sq_sum": 1157578.703125,
+          "zero_rate_before": 0.0015558746176421957,
+          "zero_rate_after": 0.5007090308779761,
+          "relative_l2_error": 0.5732356322874226
+        }
+      },
+      "blocks.34._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 1436,
+          "zeros_after": 1008,
+          "error_sq_sum": 29602798.0,
+          "reference_sq_sum": 241767682.0,
+          "zero_rate_before": 1.8549520502645504e-06,
+          "zero_rate_after": 1.3020833333333333e-06,
+          "relative_l2_error": 0.34991878484595473
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 179858844.0,
+          "reference_sq_sum": 2434609696.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.2718011095201372
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 24,
+          "zeros_after": 387072000,
+          "error_sq_sum": 293191.1328125,
+          "reference_sq_sum": 1017853.5625,
+          "zero_rate_before": 3.1001984126984126e-08,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.5367014458254221
+        }
+      },
+      "blocks.35._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 1796,
+          "zeros_after": 1239,
+          "error_sq_sum": 8565864.75,
+          "reference_sq_sum": 186063160.0,
+          "zero_rate_before": 2.319981812169312e-06,
+          "zero_rate_after": 1.6004774305555556e-06,
+          "relative_l2_error": 0.21456328524286036
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 163338136.0,
+          "reference_sq_sum": 1198604096.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.3691525891720615
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 85001.4765625,
+          "reference_sq_sum": 368665.5234375,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.4801721553603295
+        }
+      },
+      "blocks.36._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 2153,
+          "zeros_after": 1355,
+          "error_sq_sum": 13210447.75,
+          "reference_sq_sum": 195120812.0,
+          "zero_rate_before": 2.781136326058201e-06,
+          "zero_rate_after": 1.7503203538359788e-06,
+          "relative_l2_error": 0.2601998078558163
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 149647676.0,
+          "reference_sq_sum": 1269927872.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.34327759654513756
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 307811.14453125,
+          "reference_sq_sum": 944088.7421875,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.5709995426788459
+        }
+      },
+      "blocks.37._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 1844,
+          "zeros_after": 1232,
+          "error_sq_sum": 13088290.0,
+          "reference_sq_sum": 260145138.0,
+          "zero_rate_before": 2.3819857804232805e-06,
+          "zero_rate_after": 1.591435185185185e-06,
+          "relative_l2_error": 0.2243022333532839
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 143280180.0,
+          "reference_sq_sum": 1064503744.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.3668761353626796
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 87053.59765625,
+          "reference_sq_sum": 402622.5390625,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.4649907571399007
+        }
+      },
+      "blocks.38._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 2131,
+          "zeros_after": 1341,
+          "error_sq_sum": 22630368.25,
+          "reference_sq_sum": 370422580.0,
+          "zero_rate_before": 2.7527178406084655e-06,
+          "zero_rate_after": 1.7322358630952381e-06,
+          "relative_l2_error": 0.24717075511736186
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 188926698.0,
+          "reference_sq_sum": 4212960912.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.21176440006908084
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 181893,
+          "zeros_after": 387147311,
+          "error_sq_sum": 383333.66796875,
+          "reference_sq_sum": 1186239.703125,
+          "zero_rate_before": 0.00023496016245039682,
+          "zero_rate_after": 0.5000972829344411,
+          "relative_l2_error": 0.5684630678970929
+        }
+      },
+      "blocks.39._checkpoint_wrapped_module.self_attn": {
+        "Q": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "K": {
+          "calls": 0,
+          "elements": 0,
+          "zeros_before": 0,
+          "zeros_after": 0,
+          "error_sq_sum": 0.0,
+          "reference_sq_sum": 0.0,
+          "zero_rate_before": null,
+          "zero_rate_after": null,
+          "relative_l2_error": null
+        },
+        "attention_output": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 2601,
+          "zeros_after": 1685,
+          "error_sq_sum": 12389558.125,
+          "reference_sq_sum": 132218396.0,
+          "zero_rate_before": 3.3598400297619047e-06,
+          "zero_rate_after": 2.1765976355820108e-06,
+          "relative_l2_error": 0.30611313605664997
+        },
+        "K_sparse_branch_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 158013786.0,
+          "reference_sq_sum": 1591147840.0,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.31513179458144497
+        },
+        "K_linear_KtV_operand": {
+          "calls": 4,
+          "elements": 774144000,
+          "zeros_before": 0,
+          "zeros_after": 387072000,
+          "error_sq_sum": 193207.80859375,
+          "reference_sq_sum": 648790.296875,
+          "zero_rate_before": 0.0,
+          "zero_rate_after": 0.5,
+          "relative_l2_error": 0.5457078037019151
+        }
+      }
+    }
+  }
+}
