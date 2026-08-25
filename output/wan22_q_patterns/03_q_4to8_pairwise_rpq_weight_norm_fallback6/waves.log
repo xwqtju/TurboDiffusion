@@ -1,0 +1,26 @@
+
+*****************************************
+Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+*****************************************
+/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/megatron/core/optimizer/clip_grads.py:32: UserWarning: Transformer Engine and Apex are not installed. Falling back to local implementations of multi_tensor_applier, multi_tensor_l2norm, and multi_tensor_scale
+  warnings.warn(
+/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/megatron/core/optimizer/clip_grads.py:32: UserWarning: Transformer Engine and Apex are not installed. Falling back to local implementations of multi_tensor_applier, multi_tensor_l2norm, and multi_tensor_scale
+  warnings.warn(
+[08-24 16:10:07|INFO|turbodiffusion/rcm/utils/umt5.py:495:__init__] loading checkpoints/models_t5_umt5-xxl-enc-bf16.pth
+[08-24 16:10:07|INFO|turbodiffusion/rcm/utils/umt5.py:495:__init__] loading checkpoints/models_t5_umt5-xxl-enc-bf16.pth
+[08-24 16:10:21|INFO|turbodiffusion/rcm/tokenizers/wan2pt1.py:592:_video_vae] loading checkpoints/Wan2.1_VAE.pth
+[08-24 16:10:21|INFO|turbodiffusion/imaginaire/utils/distributed.py:399:sync_model_states] Synchronizing model states from rank 0 to all ranks in process group [0, 1].
+[08-24 16:10:21|INFO|turbodiffusion/inference/wan2.2_i2v_dist_infer.py:190:main] [RANK0] Rank 0: loading and sharding high-noise model
+[08-24 16:10:21|INFO|turbodiffusion/inference/wan2.2_i2v_dist_infer.py:190:main] [RANK1] Rank 1: loading and sharding high-noise model
+[08-24 16:10:22|INFO|turbodiffusion/rcm/networks/wan2pt2.py:746:enable_selective_checkpoint] Enable selective checkpoint with mm_only, for every 1 blocks. Total blocks: 40
+[08-24 16:10:46|INFO|turbodiffusion/inference/wan2.2_i2v_dist_infer.py:193:main] [RANK1] Rank 1: loading and sharding low-noise model
+[08-24 16:10:46|INFO|turbodiffusion/inference/wan2.2_i2v_dist_infer.py:193:main] [RANK0] Rank 0: loading and sharding low-noise model
+[08-24 16:10:46|INFO|turbodiffusion/rcm/networks/wan2pt2.py:746:enable_selective_checkpoint] Enable selective checkpoint with mm_only, for every 1 blocks. Total blocks: 40
+[08-24 16:11:15|INFO|turbodiffusion/inference/wan2.2_i2v_dist_infer.py:204:main] Batch item 1/1: waves.mp4
+waves:   0%|          | 0/4 [00:00<?, ?it/s]waves:  25%|██▌       | 1/4 [00:18<00:54, 18.32s/it]waves:  50%|█████     | 2/4 [00:34<00:34, 17.15s/it]waves:  75%|███████▌  | 3/4 [01:00<00:20, 20.92s/it]waves: 100%|██████████| 4/4 [01:16<00:00, 19.16s/it]waves: 100%|██████████| 4/4 [01:16<00:00, 19.13s/it]
+/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/distributed/distributed_c10d.py:4807: UserWarning: No device id is provided via `init_process_group` or `barrier `. Using the current device set by the user. 
+  warnings.warn(  # warn only once
+/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/distributed/distributed_c10d.py:4807: UserWarning: No device id is provided via `init_process_group` or `barrier `. Using the current device set by the user. 
+  warnings.warn(  # warn only once
+[08-24 16:12:52|SUCCESS|turbodiffusion/inference/wan2.2_i2v_dist_infer.py:269:main] Saved distributed result to output/wan22_q_patterns/sla_q_4to8_pairwise_weight_norm_rpq_fallback6/waves.mp4
+[08-24 16:12:52|SUCCESS|turbodiffusion/inference/wan2.2_i2v_dist_infer.py:313:main] Saved distributed sparsity profile to output/wan22_q_patterns/audit/sla_q_4to8_pairwise_weight_norm_rpq_fallback6/waves.json
