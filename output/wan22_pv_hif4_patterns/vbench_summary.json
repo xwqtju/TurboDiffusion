@@ -1,0 +1,67 @@
+{
+  "protocol": {
+    "videos_per_method": 8,
+    "resolution": "1280x720",
+    "frames": 81,
+    "sampling_steps": 4,
+    "seed": 0,
+    "attention": "Wan2.2 SLA sparse-FA branch only; Q/K dense 16-bit",
+    "pv": "masked-softmax P on S=QK^T/sqrt(d), P and V HiF4",
+    "sparsity": "all SLA layers, no dense layer fallback",
+    "mean": "unweighted arithmetic mean of SC, BC, AQ, IQ, OC, MC"
+  },
+  "metrics": {
+    "SC": "subject_consistency",
+    "BC": "background_consistency",
+    "AQ": "aesthetic_quality",
+    "IQ": "imaging_quality",
+    "OC": "overall_consistency",
+    "MC": "motion_smoothness"
+  },
+  "methods": {
+    "sla_pv_2to4_hif4": "SLA P@V 2:4 + HiF4",
+    "sla_pv_4to8_pairwise_hif4": "SLA P@V 4:8 pairwise + HiF4",
+    "sla_pv_2to4_share2_hif4": "SLA P@V 2:4 share-index=2 + HiF4"
+  },
+  "results": {
+    "sla_w16a16_dense": {
+      "SC": 0.9644059448968619,
+      "BC": 0.941705322265625,
+      "AQ": 0.6205442100763321,
+      "IQ": 0.6759058771604373,
+      "OC": 0.24505614303052425,
+      "MC": 0.992411873984077,
+      "mean": 0.740004895235643
+    },
+    "sla_pv_2to4_hif4": {
+      "SC": 0.9676236147992313,
+      "BC": 0.9480304718017578,
+      "AQ": 0.6272530183196068,
+      "IQ": 0.6768634746104111,
+      "OC": 0.2426000889390707,
+      "MC": 0.9915422326580372,
+      "mean": 0.7423188168546858,
+      "delta_vs_w16a16": 0.002313921619042869
+    },
+    "sla_pv_4to8_pairwise_hif4": {
+      "SC": 0.9655642955563962,
+      "BC": 0.9409172058105468,
+      "AQ": 0.6301771998405457,
+      "IQ": 0.6745383329744692,
+      "OC": 0.2460173349827528,
+      "MC": 0.9923941221238568,
+      "mean": 0.7416014152147613,
+      "delta_vs_w16a16": 0.0015965199791183604
+    },
+    "sla_pv_2to4_share2_hif4": {
+      "SC": 0.9661775781307369,
+      "BC": 0.9470504760742188,
+      "AQ": 0.6317569017410278,
+      "IQ": 0.6818316351337198,
+      "OC": 0.24664555676281452,
+      "MC": 0.991440197058008,
+      "mean": 0.7441503908167544,
+      "delta_vs_w16a16": 0.004145495581111436
+    }
+  }
+}

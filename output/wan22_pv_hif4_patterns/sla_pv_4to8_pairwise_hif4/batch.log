@@ -1,0 +1,201 @@
+W0902 10:08:32.344000 40609 site-packages/torch/distributed/run.py:774] 
+W0902 10:08:32.344000 40609 site-packages/torch/distributed/run.py:774] *****************************************
+W0902 10:08:32.344000 40609 site-packages/torch/distributed/run.py:774] Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+W0902 10:08:32.344000 40609 site-packages/torch/distributed/run.py:774] *****************************************
+/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/megatron/core/optimizer/clip_grads.py:32: UserWarning: Transformer Engine and Apex are not installed. Falling back to local implementations of multi_tensor_applier, multi_tensor_l2norm, and multi_tensor_scale
+  warnings.warn(
+/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/megatron/core/optimizer/clip_grads.py:32: UserWarning: Transformer Engine and Apex are not installed. Falling back to local implementations of multi_tensor_applier, multi_tensor_l2norm, and multi_tensor_scale
+  warnings.warn(
+[09-02 10:08:36|INFO|turbodiffusion/rcm/utils/umt5.py:495:__init__] loading checkpoints/Wan2.2-I2V-A14B/models_t5_umt5-xxl-enc-bf16.pth
+[09-02 10:08:36|INFO|turbodiffusion/rcm/utils/umt5.py:495:__init__] loading checkpoints/Wan2.2-I2V-A14B/models_t5_umt5-xxl-enc-bf16.pth
+[09-02 10:08:50|INFO|turbodiffusion/rcm/tokenizers/wan2pt1.py:592:_video_vae] loading checkpoints/Wan2.2-I2V-A14B/Wan2.1_VAE.pth
+[09-02 10:08:50|INFO|turbodiffusion/imaginaire/utils/distributed.py:399:sync_model_states] Synchronizing model states from rank 0 to all ranks in process group [0, 1].
+[09-02 10:08:50|INFO|turbodiffusion/inference/wan2.2_i2v_dist_infer.py:188:main] [RANK1] Rank 1: loading and sharding high-noise model
+[09-02 10:08:50|INFO|turbodiffusion/inference/wan2.2_i2v_dist_infer.py:188:main] [RANK0] Rank 0: loading and sharding high-noise model
+[09-02 10:08:51|INFO|turbodiffusion/rcm/networks/wan2pt2.py:746:enable_selective_checkpoint] Enable selective checkpoint with mm_only, for every 1 blocks. Total blocks: 40
+[09-02 10:09:15|INFO|turbodiffusion/inference/wan2.2_i2v_dist_infer.py:191:main] [RANK1] Rank 1: loading and sharding low-noise model
+[09-02 10:09:15|INFO|turbodiffusion/inference/wan2.2_i2v_dist_infer.py:191:main] [RANK0] Rank 0: loading and sharding low-noise model
+[09-02 10:09:15|INFO|turbodiffusion/rcm/networks/wan2pt2.py:746:enable_selective_checkpoint] Enable selective checkpoint with mm_only, for every 1 blocks. Total blocks: 40
+[09-02 10:09:44|INFO|turbodiffusion/inference/wan2.2_i2v_dist_infer.py:202:main] Batch item 1/8: creature.mp4
+creature:   0%|          | 0/4 [00:00<?, ?it/s]creature:  25%|██▌       | 1/4 [00:29<01:28, 29.55s/it]W0902 10:10:33.154000 40609 site-packages/torch/distributed/elastic/agent/server/api.py:723] Received 2 death signal, shutting down workers
+W0902 10:10:33.155000 40609 site-packages/torch/distributed/elastic/multiprocessing/api.py:900] Sending process 40636 closing signal SIGINT
+W0902 10:10:33.155000 40609 site-packages/torch/distributed/elastic/multiprocessing/api.py:900] Sending process 40637 closing signal SIGINT
+creature:  25%|██▌       | 1/4 [00:44<02:12, 44.19s/it]
+[rank0]: Traceback (most recent call last):
+[rank0]:   File "/home/user/桌面/workspace/TurboDiffusion/turbodiffusion/inference/wan2.2_i2v_dist_infer.py", line 322, in <module>
+[rank0]:     main()
+[rank0]:   File "/home/user/桌面/workspace/TurboDiffusion/turbodiffusion/inference/wan2.2_i2v_dist_infer.py", line 243, in main
+[rank0]:     v_pred = net(
+[rank0]:              ^^^^
+[rank0]:   File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+[rank0]:     return self._call_impl(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1879, in _call_impl
+[rank0]:     return inner()
+[rank0]:            ^^^^^^^
+[rank0]:   File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1827, in inner
+[rank0]:     result = forward_call(*args, **kwargs)
+[rank0]:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/user/桌面/workspace/TurboDiffusion/turbodiffusion/rcm/networks/wan2pt2.py", line 642, in forward
+[rank0]:     x_B_L_D = block(x_B_L_D, **kwargs)
+[rank0]:               ^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+[rank0]:     return self._call_impl(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1879, in _call_impl
+[rank0]:     return inner()
+[rank0]:            ^^^^^^^
+[rank0]:   File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1827, in inner
+[rank0]:     result = forward_call(*args, **kwargs)
+[rank0]:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/distributed/algorithms/_checkpoint/checkpoint_wrapper.py", line 171, in forward
+[rank0]:     return self.checkpoint_fn(  # type: ignore[misc]
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/_compile.py", line 53, in inner
+[rank0]:     return disable_fn(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/_dynamo/eval_frame.py", line 929, in _fn
+[rank0]:     return fn(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/utils/checkpoint.py", line 495, in checkpoint
+[rank0]:     ret = function(*args, **kwargs)
+[rank0]:           ^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+[rank0]:     return self._call_impl(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+[rank0]:     return forward_call(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/user/桌面/workspace/TurboDiffusion/turbodiffusion/rcm/networks/wan2pt2.py", line 374, in forward
+[rank0]:     x = cross_attn_ffn(x, context, context_lens, e)
+[rank0]:         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/user/桌面/workspace/TurboDiffusion/turbodiffusion/rcm/networks/wan2pt2.py", line 368, in cross_attn_ffn
+[rank0]:     x = x + self.cross_attn(self.norm3(x), context, context_lens)
+[rank0]:             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+[rank0]:     return self._call_impl(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+[rank0]:     return forward_call(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/user/桌面/workspace/TurboDiffusion/turbodiffusion/rcm/networks/wan2pt2.py", line 301, in forward
+[rank0]:     q = self.norm_q(self.q(x)).view(b, -1, n, d)
+[rank0]:         ^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+[rank0]:     return self._call_impl(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+[rank0]:     return forward_call(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/user/桌面/workspace/TurboDiffusion/turbodiffusion/ops/core.py", line 442, in forward
+[rank0]:     return rmsnorm(x.float(), self.weight, self.eps).to(x.dtype)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]: KeyboardInterrupt
+[rank1]: Traceback (most recent call last):
+[rank1]:   File "/home/user/桌面/workspace/TurboDiffusion/turbodiffusion/inference/wan2.2_i2v_dist_infer.py", line 322, in <module>
+[rank1]:     main()
+[rank1]:   File "/home/user/桌面/workspace/TurboDiffusion/turbodiffusion/inference/wan2.2_i2v_dist_infer.py", line 243, in main
+[rank1]:     v_pred = net(
+[rank1]:              ^^^^
+[rank1]:   File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+[rank1]:     return self._call_impl(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1879, in _call_impl
+[rank1]:     return inner()
+[rank1]:            ^^^^^^^
+[rank1]:   File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1827, in inner
+[rank1]:     result = forward_call(*args, **kwargs)
+[rank1]:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/home/user/桌面/workspace/TurboDiffusion/turbodiffusion/rcm/networks/wan2pt2.py", line 642, in forward
+[rank1]:     x_B_L_D = block(x_B_L_D, **kwargs)
+[rank1]:               ^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+[rank1]:     return self._call_impl(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1879, in _call_impl
+[rank1]:     return inner()
+[rank1]:            ^^^^^^^
+[rank1]:   File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1827, in inner
+[rank1]:     result = forward_call(*args, **kwargs)
+[rank1]:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/distributed/algorithms/_checkpoint/checkpoint_wrapper.py", line 171, in forward
+[rank1]:     return self.checkpoint_fn(  # type: ignore[misc]
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/_compile.py", line 53, in inner
+[rank1]:     return disable_fn(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/_dynamo/eval_frame.py", line 929, in _fn
+[rank1]:     return fn(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/utils/checkpoint.py", line 495, in checkpoint
+[rank1]:     ret = function(*args, **kwargs)
+[rank1]:           ^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+[rank1]:     return self._call_impl(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+[rank1]:     return forward_call(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/home/user/桌面/workspace/TurboDiffusion/turbodiffusion/rcm/networks/wan2pt2.py", line 374, in forward
+[rank1]:     x = cross_attn_ffn(x, context, context_lens, e)
+[rank1]:         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/home/user/桌面/workspace/TurboDiffusion/turbodiffusion/rcm/networks/wan2pt2.py", line 368, in cross_attn_ffn
+[rank1]:     x = x + self.cross_attn(self.norm3(x), context, context_lens)
+[rank1]:             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+[rank1]:     return self._call_impl(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+[rank1]:     return forward_call(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/home/user/桌面/workspace/TurboDiffusion/turbodiffusion/rcm/networks/wan2pt2.py", line 301, in forward
+[rank1]:     q = self.norm_q(self.q(x)).view(b, -1, n, d)
+[rank1]:         ^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+[rank1]:     return self._call_impl(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+[rank1]:     return forward_call(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/home/user/桌面/workspace/TurboDiffusion/turbodiffusion/ops/core.py", line 442, in forward
+[rank1]:     return rmsnorm(x.float(), self.weight, self.eps).to(x.dtype)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/home/user/桌面/workspace/TurboDiffusion/turbodiffusion/ops/core.py", line 173, in rmsnorm
+[rank1]:     _rms_norm_fwd_fused[(triton.cdiv(M, BLOCK_M),)](  #
+[rank1]:   File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/triton/runtime/jit.py", line 390, in <lambda>
+[rank1]:     return lambda *args, **kwargs: self.run(grid=grid, warmup=False, *args, **kwargs)
+[rank1]:                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/triton/runtime/jit.py", line 617, in run
+[rank1]:     kernel.run(grid_0, grid_1, grid_2, stream, kernel.function, kernel.packed_metadata, launch_metadata,
+[rank1]:   File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/triton/backends/nvidia/driver.py", line 708, in __call__
+[rank1]:     self.launch(gridX, gridY, gridZ, stream, function, self.launch_cooperative_grid, self.launch_pdl,
+[rank1]: KeyboardInterrupt
+[rank0]:[W902 10:10:34.072935420 ProcessGroupNCCL.cpp:1538] Warning: WARNING: destroy_process_group() was not called before program exit, which can leak resources. For more info, please see https://pytorch.org/docs/stable/distributed.html#shutdown (function operator())
+Traceback (most recent call last):
+  File "/home/user/.local/envs/turbodiffusion/bin/torchrun", line 6, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py", line 357, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/distributed/run.py", line 901, in main
+    run(args)
+  File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/distributed/run.py", line 892, in run
+    elastic_launch(
+  File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/distributed/launcher/api.py", line 143, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/distributed/launcher/api.py", line 268, in launch_agent
+    result = agent.run()
+             ^^^^^^^^^^^
+  File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/distributed/elastic/metrics/api.py", line 138, in wrapper
+    result = f(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^
+  File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/distributed/elastic/agent/server/api.py", line 715, in run
+    result = self._invoke_run(role)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/distributed/elastic/agent/server/api.py", line 879, in _invoke_run
+    time.sleep(monitor_interval)
+  File "/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/distributed/elastic/multiprocessing/api.py", line 84, in _terminate_process_handler
+    raise SignalException(f"Process {os.getpid()} got signal: {sigval}", sigval=sigval)
+torch.distributed.elastic.multiprocessing.api.SignalException: Process 40609 got signal: 2
