@@ -8,7 +8,8 @@
     "attention": "Wan2.2 SLA sparse-FA branch only; Q/K dense 16-bit",
     "pv": "masked-softmax P on S=QK^T/sqrt(d), P and V HiF4",
     "sparsity": "all SLA layers, no dense layer fallback",
-    "mean": "unweighted arithmetic mean of SC, BC, AQ, IQ, OC, MC"
+    "mean": "unweighted arithmetic mean of SC, BC, AQ, IQ, OC, MC",
+    "w4a4_reference_note": "sla_k_hif4_w4a4_dense is an existing dense comparator with hif8_w8a8=true and sla_k_hif4_w4a4=true; it is not a full all-Linear W4A4 baseline"
   },
   "metrics": {
     "SC": "subject_consistency",
@@ -21,7 +22,8 @@
   "methods": {
     "sla_pv_2to4_hif4": "SLA P@V 2:4 + HiF4",
     "sla_pv_4to8_pairwise_hif4": "SLA P@V 4:8 pairwise + HiF4",
-    "sla_pv_2to4_share2_hif4": "SLA P@V 2:4 share-index=2 + HiF4"
+    "sla_pv_2to4_share2_hif4": "SLA P@V 2:4 share-index=2 + HiF4",
+    "sla_k_hif4_w4a4_dense": "SLA K HiF4 W4A4 dense (existing reference)"
   },
   "results": {
     "sla_w16a16_dense": {
@@ -62,6 +64,16 @@
       "MC": 0.991440197058008,
       "mean": 0.7441503908167544,
       "delta_vs_w16a16": 0.004145495581111436
+    },
+    "sla_k_hif4_w4a4_dense": {
+      "SC": 0.9622412183322012,
+      "BC": 0.9420642852783203,
+      "AQ": 0.6238556280732155,
+      "IQ": 0.6794942310710012,
+      "OC": 0.24299627542495728,
+      "MC": 0.9922627320178108,
+      "mean": 0.740485728366251,
+      "delta_vs_w16a16": 0.00048083313060809374
     }
   }
 }

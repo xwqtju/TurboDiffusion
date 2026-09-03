@@ -1,4 +1,4 @@
-# Wan2.2 SLA P@V 四组精度审计报告
+# Wan2.2 SLA P@V 与 W4A4 dense 精度审计报告
 
 ## 审计范围
 
@@ -28,7 +28,9 @@
 
 已有的 W4A4 参考评分来自
 `output/wan22_sla_three_configs/vbench_scores/11_sla_k_hif4_w4a4_dense`（对应视频目录
-`output/wan22_sla_three_configs/hif8_2:4_vs_hif4_dense/09_sla_k_hif4_w4a4_dense`）。
+`output/wan22_sla_three_configs/hif8_2:4_vs_hif4_dense/09_sla_k_hif4_w4a4_dense`），现已归档到本目录的
+`vbench_scores/sla_k_hif4_w4a4_dense`、`sla_k_hif4_w4a4_dense/` 和
+`audit/sla_k_hif4_w4a4_dense/`。
 该批次六项指标的非加权均值为 **0.740486**。
 
 | 实验 | SC | BC | AQ | IQ | OC | MC | Mean | Δ Mean vs W4A4 |
