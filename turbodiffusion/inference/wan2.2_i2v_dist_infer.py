@@ -45,6 +45,46 @@ def merge_rank_profiles(rank_profiles: list[dict]) -> dict:
             for layer_name, measurements in model_profile["layers"].items():
                 layer = destination["layers"].setdefault(layer_name, {})
                 for label, values in measurements.items():
+                    if label == "rubin_triple_2to4":
+                        stats = layer.setdefault(label, {
+                            "calls": 0,
+                            "qk_k_zero_rate_min": 1.0, "qk_k_zero_rate_max": 0.0,
+                            "pv_p_zero_rate_min": 1.0, "pv_p_zero_rate_max": 0.0,
+                            "linear_k_zero_rate_min": 1.0, "linear_k_zero_rate_max": 0.0,
+                            "p_max_row_sum_error": 0.0, "violations": 0,
+                            "fused_reference_rel_l2_max": 0.0,
+                            "fused_p_operand_checked_elements": 0,
+                            "fused_p_operand_group_violations": 0,
+                        })
+                        if values["calls"]:
+                            stats["calls"] += values["calls"]
+                            for key in ("qk_k_zero_rate_min", "pv_p_zero_rate_min", "linear_k_zero_rate_min"):
+                                stats[key] = min(stats[key], values[key])
+                            for key in (
+                                "qk_k_zero_rate_max", "pv_p_zero_rate_max", "linear_k_zero_rate_max",
+                                "p_max_row_sum_error",
+                                "fused_reference_rel_l2_max",
+                            ):
+                                stats[key] = max(stats[key], values[key])
+                            stats["violations"] += values["violations"]
+                            stats["fused_p_operand_checked_elements"] += values.get(
+                                "fused_p_operand_checked_elements", 0
+                            )
+                            stats["fused_p_operand_group_violations"] += values.get(
+                                "fused_p_operand_group_violations", 0
+                            )
+                        continue
+                    if label == "hif4_operands":
+                        destination_operands = layer.setdefault(label, {})
+                        for gemm, operand_stats in values.items():
+                            stats = destination_operands.setdefault(gemm, {
+                                **operand_stats, "calls": 0,
+                                "group_violations": 0, "checked_groups": 0,
+                            })
+                            stats["calls"] += operand_stats["calls"]
+                            stats["group_violations"] += operand_stats["group_violations"]
+                            stats["checked_groups"] += operand_stats["checked_groups"]
+                        continue
                     stats = layer.setdefault(label, {
                         "calls": 0, "elements": 0, "zeros_before": 0, "zeros_after": 0,
                         "error_sq_sum": 0.0, "reference_sq_sum": 0.0,
@@ -54,6 +94,8 @@ def merge_rank_profiles(rank_profiles: list[dict]) -> dict:
     for model_profile in merged.values():
         for measurements in model_profile["layers"].values():
             for stats in measurements.values():
+                if "elements" not in stats:
+                    continue
                 elements = stats["elements"]
                 reference_sq_sum = stats["reference_sq_sum"]
                 stats["zero_rate_before"] = stats["zeros_before"] / elements if elements else None
@@ -118,8 +160,6 @@ def build_tasks(args) -> list[tuple[str, str, str]]:
 def main() -> None:
     args = parse_arguments()
     tasks = build_tasks(args)
-    if args.sparsity_profile_path is not None and len(tasks) != 1:
-        raise ValueError("Distributed --sparsity_profile_path currently requires exactly one task")
     # The umT5 loader uses a meta-parameter broadcast when torch.distributed is
     # initialized. Compute the small final embedding first on each local GPU,
     # then establish the DiT process group after releasing the encoder.
@@ -241,14 +281,33 @@ def main() -> None:
             profile = {
                 "schema_version": 1,
                 "world_size": world_size,
+                "task_count": len(tasks),
+                "outputs": [Path(task[2]).name for task in tasks],
                 "attention_type": args.attention_type,
                 "sparsity_modes": {
                     "q_2to4": args.sla_q_2to4,
+                    "q_2to4_weight_norm": args.sla_q_2to4_weight_norm,
+                "k_2to4_weight_norm": args.sla_k_2to4_weight_norm,
+                "k_weight_norm_rpq": args.sla_k_weight_norm_rpq,
+                "dense_fallback_layers": list(args.dense_fallback_layers),
+                    "pv_dense_fallback_layers": list(args.pv_dense_fallback_layers),
                     "q_4to8_pairwise": args.sla_q_4to8_pairwise,
                     "q_2to4_share_index_2": args.sla_q_2to4_share2,
                     "k_2to4": args.sla_k_2to4,
                     "k_4to8_pairwise": args.sla_k_4to8_pairwise,
                     "k_2to4_share_index_2": args.sla_k_2to4_share2,
+                    "branch_aware_k": args.branch_aware_k_sparsity,
+                    "rubin_triple_2to4": args.rubin_triple_2to4,
+                    "rubin_sparse_engine": args.rubin_sparse_engine,
+                    "rubin_validate_fused": args.rubin_validate_fused,
+                    "hif4_sparse_upgrade": args.hif4_sparse_upgrade,
+                    "hif4_only_scope": args.hif4_only_scope,
+                    "hif8_w8a8": args.hif8_w8a8,
+                    "sla_k_hif4_w4a4": args.sla_k_hif4_w4a4,
+                    "pv_sparsity": args.pv_sparsity,
+                    "pv_hif4": args.pv_hif4,
+                    "pv_qk_hif4": args.pv_qk_hif4,
+                    "norm_compensate": args.norm_compensate,
                 },
                 **merge_rank_profiles(rank_profiles),
             }

@@ -154,6 +154,10 @@ def replace_attention(
     dense_fallback_layers: tuple[int, ...] = (),
     sla_k_weight_norm_rpq: bool = False,
     sla_q_weight_norm_rpq: bool = False,
+    pv_sparsity: str = "none",
+    pv_hif4: bool = False,
+    pv_qk_hif4: bool = False,
+    pv_dense_fallback_layers: tuple[int, ...] = (),
 ) -> torch.nn.Module:
     assert attention_type in ["sla", "sagesla"], "Invalid attention type."
     if hif4_sparse_upgrade and hif4_only_scope != "none":
@@ -211,6 +215,12 @@ def replace_attention(
                 module.attn_op.local_attn = dense_attention
                 continue
             if attention_type == "sla":
+                # P-only fallback keeps the SLA module and all requested
+                # quantization.  It disables only P's structured mask in the
+                # listed blocks, so P@V remains dense-within-LUT and HiF4.
+                layer_pv_sparsity = (
+                    "none" if block_index in pv_dense_fallback_layers else pv_sparsity
+                )
                 local_attn = SLA(
                     head_dim=module.dim // module.num_heads,
                     topk=sla_topk,
@@ -231,6 +241,9 @@ def replace_attention(
                     k_weight_norm_2to4=sla_k_2to4_weight_norm,
                     k_weight_norm_rpq=sla_k_weight_norm_rpq,
                     q_weight_norm_rpq=sla_q_weight_norm_rpq,
+                    pv_sparsity=layer_pv_sparsity,
+                    pv_hif4=pv_hif4,
+                    pv_qk_hif4=pv_qk_hif4,
                 )
             elif attention_type == "sagesla":
                 local_attn = SageSLA(
@@ -443,6 +456,10 @@ def create_model(dit_path: str, args: argparse.Namespace, target_device: str | t
             dense_fallback_layers=tuple(getattr(args, "dense_fallback_layers", ())),
             sla_k_weight_norm_rpq=getattr(args, "sla_k_weight_norm_rpq", False),
             sla_q_weight_norm_rpq=getattr(args, "sla_q_weight_norm_rpq", False),
+            pv_sparsity=getattr(args, "pv_sparsity", "none"),
+            pv_hif4=getattr(args, "pv_hif4", False),
+            pv_qk_hif4=getattr(args, "pv_qk_hif4", False),
+            pv_dense_fallback_layers=tuple(getattr(args, "pv_dense_fallback_layers", ())),
         )
     if getattr(args, "hif8_w8a8", False) and args.quant_linear:
         raise ValueError("--hif8_w8a8 conflicts with --quant_linear")
@@ -482,6 +499,16 @@ def parse_arguments() -> argparse.Namespace:
     parser.add_argument("--rubin_sparse_engine", choices=["fused"], default="fused")
     parser.add_argument("--hif4_sparse_upgrade", action="store_true")
     parser.add_argument("--hif4_only_scope", choices=["none", "q_path", "k_path", "linear", "rubin"], default="none")
+    parser.add_argument("--pv_sparsity", choices=["none", "2to4", "4to8_pairwise", "2to4_share2"], default="none")
+    parser.add_argument("--pv_hif4", action="store_true")
+    parser.add_argument(
+        "--pv_dense_fallback_layers", type=str, default="",
+        help="Comma-separated block indices that keep dense P but retain P/V and QK quantization",
+    )
+    parser.add_argument(
+        "--pv_qk_hif4", action="store_true",
+        help="Fake-quantize Q/K operands to HiF4 for the QK GEMM (independent of P/V HiF4)",
+    )
     parser.add_argument("--sla_k_hif4_w4a4", action="store_true", help="Use HiFloat4 W4A4 only for SLA K projections (with HiF8 Q/V/O)")
     parser.add_argument("--ffn_hif4_w4a4", action="store_true")
     parser.add_argument("--ffn_hif8_w8a8_2to4_weight_norm", action="store_true")

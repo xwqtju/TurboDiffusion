@@ -72,12 +72,49 @@ def parse_arguments() -> argparse.Namespace:
         "--linear_qkv_2to4_operand", choices=["none", "q", "kv"], default="none",
         help="Select the 2:4 sparse operand for the linear-attention Q@KV GEMM",
     )
-    parser.add_argument("--sla_q_2to4", action="store_true", help="Simulate 2:4 activation sparsity on SLA/SageSLA queries")
-    parser.add_argument("--sla_q_4to8_pairwise", action="store_true", help="Simulate pairwise 4:8 activation sparsity on SLA/SageSLA queries")
-    parser.add_argument("--sla_k_2to4", action="store_true", help="Simulate 2:4 activation sparsity on SLA/SageSLA keys")
-    parser.add_argument("--sla_k_4to8_pairwise", action="store_true", help="Simulate pairwise 4:8 activation sparsity on SLA/SageSLA keys")
+    parser.add_argument("--sla_q_2to4", action="store_true", help="Use feature-sparse Q in sparse QK and post-feature-map linear Q@KV")
+    parser.add_argument("--sla_q_2to4_weight_norm", action="store_true", help="Use weight-norm-scored Q 2:4 in both SLA branches without value rescaling")
+    parser.add_argument("--sla_q_4to8_pairwise", action="store_true", help="Use pairwise 4:8 feature-sparse Q in both SLA branches")
+    parser.add_argument("--sla_k_2to4", action="store_true", help="Use feature-sparse K in sparse QK and token-sparse K in linear K.T@V")
+    parser.add_argument("--sla_k_2to4_weight_norm", action="store_true", help="Use weight-norm-scored K 2:4 in both SLA branches without value rescaling")
+    parser.add_argument("--sla_k_weight_norm_rpq", action="store_true", help="Calibrate and freeze an RPQ feature permutation for weight-normal K 2:4")
+    parser.add_argument("--sla_q_weight_norm_rpq", action="store_true", help="Calibrate and freeze an RPQ feature permutation for weight-normal Q sparsity")
+    parser.add_argument("--sla_dense_fallback_layers", type=str, default="", help="Comma-separated Wan block indices to run with dense attention instead of SLA")
+    parser.add_argument("--sla_k_4to8_pairwise", action="store_true", help="Use pairwise 4:8 K on each SLA branch's GEMM reduction dimension")
     parser.add_argument("--sla_q_2to4_share2", action="store_true", help="Simulate Q 2:4 with one L1-selected mask shared by two tokens")
+    parser.add_argument("--pv_sparsity", choices=["none", "2to4", "4to8_pairwise", "2to4_share2"], default="none")
+    parser.add_argument("--pv_hif4", action="store_true")
+    parser.add_argument(
+        "--pv_dense_fallback_layers", type=str, default="",
+        help="Comma-separated Wan block indices that disable only P sparsity while retaining HiF4",
+    )
+    parser.add_argument(
+        "--pv_qk_hif4", action="store_true",
+        help="Fake-quantize Q/K operands to HiF4 for the QK GEMM (independent of P/V HiF4)",
+    )
     parser.add_argument("--sla_k_2to4_share2", action="store_true", help="Simulate K 2:4 with one L1-selected mask shared by two tokens")
+    parser.add_argument(
+        "--branch_aware_k_sparsity",
+        choices=["none", "2to4", "4to8_pairwise", "2to4_share2"],
+        default="none",
+        help="Use feature-sparse K in sparse attention and token-sparse K in linear K.T@V",
+    )
+    parser.add_argument(
+        "--rubin_triple_2to4", action="store_true",
+        help="Strict reference path: feature-2:4 K for QK, score-2:4 masked-softmax P for PV, token-2:4 K for linear K.T@V",
+    )
+    parser.add_argument(
+        "--rubin_sparse_engine", choices=["fused"], default="fused",
+        help="Sparse-attention implementation for Rubin triple 2:4; fused is forward-only and sm_120-only",
+    )
+    parser.add_argument("--hif4_sparse_upgrade", action="store_true", help="Add HiF4 W4A4 QDQ to the selected structured-sparse attention GEMMs")
+    parser.add_argument("--hif4_only_scope", choices=["none", "q_path", "k_path", "linear", "rubin"], default="none", help="HiF4-only matched GEMM scope without structured sparsity")
+    parser.add_argument(
+        "--rubin_validate_fused", action="store_true",
+        help="Also run the explicit oracle per layer and fail if fused relative L2 exceeds 1e-3",
+    )
+    parser.add_argument("--no_norm_compensate", dest="norm_compensate", action="store_false",
+                        help="Disable RT-Lynx norm compensation for 2:4 activation sparsity")
     parser.add_argument(
         "--sparsity_profile_path",
         type=str,
@@ -85,9 +122,18 @@ def parse_arguments() -> argparse.Namespace:
         help="Write per-layer activation zero rates and dense-vs-sparse relative-L2 errors to JSON; doubles attention compute",
     )
     parser.add_argument("--quant_linear", action="store_true", help="Whether to replace Linear layers with quantized versions")
+    parser.add_argument("--hif8_w8a8", action="store_true", help="Simulate dense HiFloat8 W8A8 for Wan block Linear layers")
+    parser.add_argument("--sla_k_hif4_w4a4", action="store_true", help="Use HiFloat4 W4A4 only for SLA K projections")
+    parser.add_argument("--ffn_hif4_w4a4", action="store_true", help="Use HiFloat4 W4A4 for all FFN Linear layers")
+    parser.add_argument("--ffn_hif8_w8a8_2to4_weight_norm", action="store_true", help="Use HiFloat8 W8A8 with weight-normal activation 2:4 for all FFN Linear layers")
     parser.add_argument("--default_norm", action="store_true", help="Whether to replace LayerNorm/RMSNorm layers with faster versions")
     parser.add_argument("--serve", action="store_true", help="Launch interactive TUI server mode (keeps model loaded)")
-    return parser.parse_args()
+    args = parser.parse_args()
+    args.dense_fallback_layers = tuple(int(x) for x in args.sla_dense_fallback_layers.split(",") if x.strip())
+    args.pv_dense_fallback_layers = tuple(
+        int(x) for x in args.pv_dense_fallback_layers.split(",") if x.strip()
+    )
+    return args
 
 
 if __name__ == "__main__":
@@ -243,11 +289,21 @@ if __name__ == "__main__":
             "attention_type": args.attention_type,
             "sparsity_modes": {
                 "q_2to4": args.sla_q_2to4,
+                "q_2to4_weight_norm": args.sla_q_2to4_weight_norm,
+                "k_2to4_weight_norm": args.sla_k_2to4_weight_norm,
+                "k_weight_norm_rpq": args.sla_k_weight_norm_rpq,
                 "q_4to8_pairwise": args.sla_q_4to8_pairwise,
                 "q_2to4_share_index_2": args.sla_q_2to4_share2,
                 "k_2to4": args.sla_k_2to4,
                 "k_4to8_pairwise": args.sla_k_4to8_pairwise,
                 "k_2to4_share_index_2": args.sla_k_2to4_share2,
+                "branch_aware_k": args.branch_aware_k_sparsity,
+                "rubin_triple_2to4": args.rubin_triple_2to4,
+                "hif4_sparse_upgrade": args.hif4_sparse_upgrade,
+                "hif4_only_scope": args.hif4_only_scope,
+                "hif8_w8a8": args.hif8_w8a8,
+                "sla_k_hif4_w4a4": args.sla_k_hif4_w4a4,
+                "norm_compensate": args.norm_compensate,
             },
             "high_noise": collect_sparsity_profiles(high_noise_model, "high_noise"),
             "low_noise": collect_sparsity_profiles(low_noise_model, "low_noise"),

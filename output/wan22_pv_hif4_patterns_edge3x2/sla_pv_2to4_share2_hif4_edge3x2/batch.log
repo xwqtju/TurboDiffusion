@@ -1,0 +1,47 @@
+W0909 11:18:15.715000 672869 site-packages/torch/distributed/run.py:774] 
+W0909 11:18:15.715000 672869 site-packages/torch/distributed/run.py:774] *****************************************
+W0909 11:18:15.715000 672869 site-packages/torch/distributed/run.py:774] Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+W0909 11:18:15.715000 672869 site-packages/torch/distributed/run.py:774] *****************************************
+/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/megatron/core/optimizer/clip_grads.py:32: UserWarning: Transformer Engine and Apex are not installed. Falling back to local implementations of multi_tensor_applier, multi_tensor_l2norm, and multi_tensor_scale
+  warnings.warn(
+/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/megatron/core/optimizer/clip_grads.py:32: UserWarning: Transformer Engine and Apex are not installed. Falling back to local implementations of multi_tensor_applier, multi_tensor_l2norm, and multi_tensor_scale
+  warnings.warn(
+[09-09 11:18:25|INFO|turbodiffusion/rcm/utils/umt5.py:495:__init__] loading checkpoints/models_t5_umt5-xxl-enc-bf16.pth
+[09-09 11:18:25|INFO|turbodiffusion/rcm/utils/umt5.py:495:__init__] loading checkpoints/models_t5_umt5-xxl-enc-bf16.pth
+[09-09 11:18:42|INFO|turbodiffusion/rcm/tokenizers/wan2pt1.py:592:_video_vae] loading checkpoints/Wan2.1_VAE.pth
+[09-09 11:18:42|INFO|turbodiffusion/imaginaire/utils/distributed.py:399:sync_model_states] Synchronizing model states from rank 0 to all ranks in process group [0, 1].
+[09-09 11:18:47|INFO|turbodiffusion/inference/wan2.2_i2v_dist_infer.py:188:main] [RANK1] Rank 1: loading and sharding high-noise model
+[09-09 11:18:47|INFO|turbodiffusion/inference/wan2.2_i2v_dist_infer.py:188:main] [RANK0] Rank 0: loading and sharding high-noise model
+[09-09 11:18:48|INFO|turbodiffusion/rcm/networks/wan2pt2.py:746:enable_selective_checkpoint] Enable selective checkpoint with mm_only, for every 1 blocks. Total blocks: 40
+[09-09 11:19:15|INFO|turbodiffusion/inference/wan2.2_i2v_dist_infer.py:191:main] [RANK0] Rank 0: loading and sharding low-noise model
+[09-09 11:19:16|INFO|turbodiffusion/rcm/networks/wan2pt2.py:746:enable_selective_checkpoint] Enable selective checkpoint with mm_only, for every 1 blocks. Total blocks: 40
+[09-09 11:19:26|INFO|turbodiffusion/inference/wan2.2_i2v_dist_infer.py:191:main] [RANK1] Rank 1: loading and sharding low-noise model
+[09-09 11:19:54|INFO|turbodiffusion/inference/wan2.2_i2v_dist_infer.py:202:main] Batch item 1/8: creature.mp4
+creature:   0%|          | 0/4 [00:00<?, ?it/s]creature:  25%|██▌       | 1/4 [00:33<01:39, 33.26s/it]creature:  50%|█████     | 2/4 [00:55<00:53, 26.55s/it]creature:  75%|███████▌  | 3/4 [01:31<00:30, 30.95s/it]creature: 100%|██████████| 4/4 [01:59<00:00, 30.00s/it]creature: 100%|██████████| 4/4 [01:59<00:00, 29.96s/it]
+/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/distributed/distributed_c10d.py:4807: UserWarning: No device id is provided via `init_process_group` or `barrier `. Using the current device set by the user. 
+  warnings.warn(  # warn only once
+/home/user/.local/envs/turbodiffusion/lib/python3.12/site-packages/torch/distributed/distributed_c10d.py:4807: UserWarning: No device id is provided via `init_process_group` or `barrier `. Using the current device set by the user. 
+  warnings.warn(  # warn only once
+[09-09 11:22:24|SUCCESS|turbodiffusion/inference/wan2.2_i2v_dist_infer.py:267:main] Saved distributed result to output/wan22_pv_hif4_patterns_edge3x2/sla_pv_2to4_share2_hif4_edge3x2/creature.mp4
+[09-09 11:22:25|INFO|turbodiffusion/inference/wan2.2_i2v_dist_infer.py:202:main] Batch item 2/8: garden.mp4
+garden:   0%|          | 0/4 [00:00<?, ?it/s]garden:  25%|██▌       | 1/4 [00:21<01:05, 21.94s/it]garden:  50%|█████     | 2/4 [00:50<00:51, 25.80s/it]garden:  75%|███████▌  | 3/4 [01:31<00:32, 32.76s/it]garden: 100%|██████████| 4/4 [01:59<00:00, 31.08s/it]garden: 100%|██████████| 4/4 [01:59<00:00, 29.99s/it]
+[09-09 11:24:59|SUCCESS|turbodiffusion/inference/wan2.2_i2v_dist_infer.py:267:main] Saved distributed result to output/wan22_pv_hif4_patterns_edge3x2/sla_pv_2to4_share2_hif4_edge3x2/garden.mp4
+[09-09 11:25:00|INFO|turbodiffusion/inference/wan2.2_i2v_dist_infer.py:202:main] Batch item 3/8: mammoths.mp4
+mammoths:   0%|          | 0/4 [00:00<?, ?it/s]mammoths:  25%|██▌       | 1/4 [00:21<01:05, 21.92s/it]mammoths:  50%|█████     | 2/4 [00:50<00:51, 25.76s/it]mammoths:  75%|███████▌  | 3/4 [01:29<00:31, 31.71s/it]mammoths: 100%|██████████| 4/4 [01:57<00:00, 30.34s/it]mammoths: 100%|██████████| 4/4 [01:57<00:00, 29.35s/it]
+[09-09 11:27:25|SUCCESS|turbodiffusion/inference/wan2.2_i2v_dist_infer.py:267:main] Saved distributed result to output/wan22_pv_hif4_patterns_edge3x2/sla_pv_2to4_share2_hif4_edge3x2/mammoths.mp4
+[09-09 11:27:25|INFO|turbodiffusion/inference/wan2.2_i2v_dist_infer.py:202:main] Batch item 4/8: monster.mp4
+monster:   0%|          | 0/4 [00:00<?, ?it/s]monster:  25%|██▌       | 1/4 [00:21<01:04, 21.61s/it]monster:  50%|█████     | 2/4 [00:49<00:50, 25.41s/it]monster:  75%|███████▌  | 3/4 [01:22<00:28, 28.87s/it]monster: 100%|██████████| 4/4 [01:50<00:00, 28.59s/it]monster: 100%|██████████| 4/4 [01:50<00:00, 27.71s/it]
+[09-09 11:29:42|SUCCESS|turbodiffusion/inference/wan2.2_i2v_dist_infer.py:267:main] Saved distributed result to output/wan22_pv_hif4_patterns_edge3x2/sla_pv_2to4_share2_hif4_edge3x2/monster.mp4
+[09-09 11:29:42|INFO|turbodiffusion/inference/wan2.2_i2v_dist_infer.py:202:main] Batch item 5/8: pigeon.mp4
+pigeon:   0%|          | 0/4 [00:00<?, ?it/s]pigeon:  25%|██▌       | 1/4 [00:21<01:04, 21.62s/it]pigeon:  50%|█████     | 2/4 [00:49<00:50, 25.41s/it]pigeon:  75%|███████▌  | 3/4 [01:22<00:28, 28.78s/it]pigeon: 100%|██████████| 4/4 [01:50<00:00, 28.57s/it]pigeon: 100%|██████████| 4/4 [01:50<00:00, 27.68s/it]
+[09-09 11:32:02|SUCCESS|turbodiffusion/inference/wan2.2_i2v_dist_infer.py:267:main] Saved distributed result to output/wan22_pv_hif4_patterns_edge3x2/sla_pv_2to4_share2_hif4_edge3x2/pigeon.mp4
+[09-09 11:32:02|INFO|turbodiffusion/inference/wan2.2_i2v_dist_infer.py:202:main] Batch item 6/8: televisions.mp4
+televisions:   0%|          | 0/4 [00:00<?, ?it/s]televisions:  25%|██▌       | 1/4 [00:21<01:05, 21.83s/it]televisions:  50%|█████     | 2/4 [00:50<00:51, 25.64s/it]televisions:  75%|███████▌  | 3/4 [01:25<00:30, 30.25s/it]televisions: 100%|██████████| 4/4 [01:54<00:00, 29.49s/it]televisions: 100%|██████████| 4/4 [01:54<00:00, 28.55s/it]
+[09-09 11:34:30|SUCCESS|turbodiffusion/inference/wan2.2_i2v_dist_infer.py:267:main] Saved distributed result to output/wan22_pv_hif4_patterns_edge3x2/sla_pv_2to4_share2_hif4_edge3x2/televisions.mp4
+[09-09 11:34:31|INFO|turbodiffusion/inference/wan2.2_i2v_dist_infer.py:202:main] Batch item 7/8: waves.mp4
+waves:   0%|          | 0/4 [00:00<?, ?it/s]waves:  25%|██▌       | 1/4 [00:21<01:05, 21.86s/it]waves:  50%|█████     | 2/4 [00:50<00:51, 25.65s/it]waves:  75%|███████▌  | 3/4 [01:23<00:29, 29.27s/it]waves: 100%|██████████| 4/4 [01:52<00:00, 28.93s/it]waves: 100%|██████████| 4/4 [01:52<00:00, 28.04s/it]
+[09-09 11:36:53|SUCCESS|turbodiffusion/inference/wan2.2_i2v_dist_infer.py:267:main] Saved distributed result to output/wan22_pv_hif4_patterns_edge3x2/sla_pv_2to4_share2_hif4_edge3x2/waves.mp4
+[09-09 11:36:53|INFO|turbodiffusion/inference/wan2.2_i2v_dist_infer.py:202:main] Batch item 8/8: woman.mp4
+woman:   0%|          | 0/4 [00:00<?, ?it/s]woman:  25%|██▌       | 1/4 [00:21<01:05, 21.81s/it]woman:  50%|█████     | 2/4 [00:50<00:51, 25.67s/it]woman:  75%|███████▌  | 3/4 [01:25<00:29, 29.92s/it]woman: 100%|██████████| 4/4 [01:53<00:00, 29.37s/it]woman: 100%|██████████| 4/4 [01:53<00:00, 28.42s/it]
+[09-09 11:39:17|SUCCESS|turbodiffusion/inference/wan2.2_i2v_dist_infer.py:267:main] Saved distributed result to output/wan22_pv_hif4_patterns_edge3x2/sla_pv_2to4_share2_hif4_edge3x2/woman.mp4
+[09-09 11:39:17|SUCCESS|turbodiffusion/inference/wan2.2_i2v_dist_infer.py:317:main] Saved distributed sparsity profile to output/wan22_pv_hif4_patterns_edge3x2/audit/sla_pv_2to4_share2_hif4_edge3x2/batch.json

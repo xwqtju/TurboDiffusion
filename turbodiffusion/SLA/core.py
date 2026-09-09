@@ -295,17 +295,16 @@ def _strict_two_of_four(tensor, label):
         raise RuntimeError(f"{label} is not strict 2:4 immediately before GEMM")
 
 
-def explicit_block_sparse_attention_rubin_2to4(q, k, v, lut, block_q, block_k):
+def explicit_block_sparse_attention_pv_structured(q, k, v, lut, block_q, block_k, mode="2to4", hif4_pv=False):
     """Reference Rubin-style path with packed block-mask P and dense GEMMs.
 
-    QK uses feature-2:4 K supplied by the caller. Scores in every selected key
-    block are pruned 2:4 before a masked softmax; packed P then multiplies the
-    corresponding packed V. Unselected blocks are implicit zeros.
+    Q/K stay dense.  Scores in every selected key block are pruned before a
+    masked softmax, then the structured P multiplies V.  Optionally only the
+    two P@V operands are HiF4 QDQ'd.  Unselected blocks are implicit zeros.
     """
     batch, heads, length, head_dim = q.shape
-    if head_dim % 4 or length % 4:
-        raise ValueError(f"Rubin 2:4 requires head_dim and token length divisible by 4, got D={head_dim}, L={length}")
-    _strict_two_of_four(k, "sparse QK K")
+    if mode not in {"2to4", "4to8_pairwise", "2to4_share2"}:
+        raise ValueError(f"invalid P sparsity mode: {mode}")
     output = torch.empty_like(q)
     p_elements = 0
     p_zeros = torch.zeros((), device=q.device, dtype=torch.int64)
@@ -332,14 +331,27 @@ def explicit_block_sparse_attention_rubin_2to4(q, k, v, lut, block_q, block_k):
         ) * scale
         scores = scores.masked_fill(~valid.unsqueeze(-2), float("-inf"))
         grouped_scores = scores.reshape(*scores.shape[:-1], -1, 4)
-        # Stable left-to-right tie breaking matches the fused kernel. This is
-        # important for BF16 model scores, where exact ties are common.
-        keep_indices = torch.argsort(
-            grouped_scores, dim=-1, descending=True, stable=True
-        )[..., :2]
-        keep = torch.zeros_like(grouped_scores, dtype=torch.bool)
-        keep.scatter_(-1, keep_indices, True)
         grouped_valid = valid.reshape(batch, heads, -1, 4).unsqueeze(-3)
+        if mode == "2to4":
+            keep_indices = torch.argsort(grouped_scores, dim=-1, descending=True, stable=True)[..., :2]
+            keep = torch.zeros_like(grouped_scores, dtype=torch.bool)
+            keep.scatter_(-1, keep_indices, True)
+        elif mode == "4to8_pairwise":
+            group8 = scores.reshape(*scores.shape[:-1], -1, 8)
+            pair8 = group8.reshape(*group8.shape[:-1], 4, 2).sum(dim=-1)
+            kp8 = torch.zeros_like(pair8, dtype=torch.bool)
+            kp8.scatter_(-1, torch.argsort(pair8, dim=-1, descending=True, stable=True)[..., :2], True)
+            keep = kp8[..., None].expand_as(group8.reshape(*group8.shape[:-1], 4, 2)).reshape_as(group8).reshape_as(scores)
+            keep = keep.reshape_as(grouped_scores)
+        else:
+            # Adjacent query tokens share a mask; sum their logits before the
+            # top-2 decision so both rows use identical retained key indices.
+            if grouped_scores.shape[-3] % 2:
+                raise ValueError("2to4_share2 requires an even query-block length")
+            shared_scores = grouped_scores.reshape(*grouped_scores.shape[:-3], -1, 2, *grouped_scores.shape[-2:]).sum(dim=-3)
+            shared_keep = torch.zeros_like(shared_scores, dtype=torch.bool)
+            shared_keep.scatter_(-1, torch.argsort(shared_scores, dim=-1, descending=True, stable=True)[..., :2], True)
+            keep = shared_keep.unsqueeze(-3).expand_as(grouped_scores.reshape(*grouped_scores.shape[:-3], -1, 2, *grouped_scores.shape[-2:])).reshape_as(grouped_scores)
         keep = keep & grouped_valid
         sparse_scores = grouped_scores.masked_fill(~keep, float("-inf")).reshape_as(scores)
         probability_float = torch.softmax(sparse_scores.float(), dim=-1)
@@ -347,20 +359,35 @@ def explicit_block_sparse_attention_rubin_2to4(q, k, v, lut, block_q, block_k):
         row_error = (probability_float.sum(dim=-1) - 1).abs().max()
         max_row_sum_error = torch.maximum(max_row_sum_error, row_error)
         probability = probability_float.to(v.dtype)
+        if hif4_pv:
+            # The sparse index metadata records the selected mask.  Do not
+            # force tiny selected probabilities back to a nonzero HiF4 value:
+            # doing so injects probability mass and invalidates masked-softmax
+            # normalization.  A selected value encoded as zero is valid.
+            probability = hif4_qdq(probability, -1).to(v.dtype)
+            selected_v = hif4_qdq(selected_v, -2).to(v.dtype)
         p_groups = probability.reshape(*probability.shape[:-1], -1, 4)
         valid_groups = grouped_valid.expand(*p_groups.shape)
         fully_valid = valid_groups.all(dim=-1)
         group_nonzeros = torch.count_nonzero(p_groups, dim=-1)
         kept_per_group = torch.count_nonzero(keep, dim=-1)
         leaked_outside_mask = torch.count_nonzero(probability.masked_fill(keep.reshape_as(probability), 0))
-        p_group_violation += torch.count_nonzero(fully_valid & (kept_per_group != 2))
-        p_group_violation += torch.count_nonzero(group_nonzeros > 2)
+        expected = 4 if mode == "4to8_pairwise" else 2
+        if mode == "4to8_pairwise":
+            p8 = probability.reshape(*probability.shape[:-1], -1, 8)
+            v8 = valid.reshape(batch, heads, -1, 8).unsqueeze(-3).expand_as(p8)
+            selected8 = keep.reshape_as(probability).reshape(*probability.shape[:-1], -1, 8)
+            p_group_violation += torch.count_nonzero(v8.all(dim=-1) & (torch.count_nonzero(selected8, dim=-1) != expected))
+            p_group_violation += torch.count_nonzero(torch.count_nonzero(p8, dim=-1) > expected)
+        else:
+            p_group_violation += torch.count_nonzero(fully_valid & (kept_per_group != expected))
+            p_group_violation += torch.count_nonzero(group_nonzeros > expected)
         p_group_violation += leaked_outside_mask
         p_elements += probability.numel()
         p_zeros += torch.count_nonzero(probability == 0)
         output[:, :, q_start:q_stop] = probability @ selected_v
     if p_group_violation.item():
-        raise RuntimeError(f"P is not strict 2:4 in {p_group_violation.item()} valid groups before P@V")
+        raise RuntimeError(f"P violates {mode} structure in {p_group_violation.item()} valid groups before P@V")
     if max_row_sum_error.item() > 2e-3:
         raise RuntimeError(f"Sparse P rows are not normalized; max error={max_row_sum_error.item()}")
     p_zeros_value = p_zeros.item()
@@ -371,6 +398,17 @@ def explicit_block_sparse_attention_rubin_2to4(q, k, v, lut, block_q, block_k):
         "p_max_row_sum_error": max_row_sum_error.item(),
         "p_group_violations": 0,
     }
+
+
+def explicit_block_sparse_attention_rubin_2to4(q, k, v, lut, block_q, block_k):
+    """Backward-compatible Rubin oracle: sparse K plus 2:4 P."""
+    if q.shape[-2] % 4:
+        raise ValueError(
+            "Rubin P sparsity requires token length divisible by 4, "
+            f"got {q.shape[-2]}"
+        )
+    _strict_two_of_four(k, "sparse QK K")
+    return explicit_block_sparse_attention_pv_structured(q, k, v, lut, block_q, block_k)
 
 
 def linear_attention_2to4(
@@ -532,6 +570,9 @@ class SparseLinearAttention(nn.Module):
         k_weight_norm_2to4=False,
         k_weight_norm_rpq=False,
         q_weight_norm_rpq=False,
+        pv_sparsity="none",
+        pv_hif4=False,
+        pv_qk_hif4=False,
     ):
         R'''
         Args:
@@ -565,6 +606,12 @@ class SparseLinearAttention(nn.Module):
         self.k_weight_norm_2to4 = k_weight_norm_2to4
         self.k_weight_norm_rpq = k_weight_norm_rpq
         self.q_weight_norm_rpq = q_weight_norm_rpq
+        self.pv_sparsity = pv_sparsity
+        self.pv_hif4 = pv_hif4
+        # Independently fake-quantize the Q/K operands used by the preceding
+        # QK^T GEMM.  This is intentionally separate from pv_hif4 so that
+        # experiments can isolate QK quantization while retaining HiF4 P/V.
+        self.pv_qk_hif4 = pv_qk_hif4
         self.register_buffer("k_rpq_permutation", None, persistent=False)
         self.register_buffer("q_rpq_permutation", None, persistent=False)
         self._hif4_operand_audit = {}
@@ -673,6 +720,8 @@ class SparseLinearAttention(nn.Module):
         )
         effective_rubin = self.rubin_triple_2to4 and not getattr(self, "_sparsity_profile_dense_replay", False)
         qk_hif4 = (
+            self.pv_qk_hif4
+            or
             self.hif4_only_scope in {"q_path", "k_path", "rubin"}
             or self.hif4_sparse_upgrade and (
                 effective_q_mode != "none" or effective_branch_mode != "none" or effective_rubin
@@ -705,7 +754,7 @@ class SparseLinearAttention(nn.Module):
 
         pairwise_weight_norm_k = effective_branch_mode == "4to8_pairwise" and self.k_weight_norm_rpq
         share2_weight_norm_k = effective_branch_mode == "2to4_share2" and self.k_weight_norm_rpq
-        if (effective_weight_norm_k or pairwise_weight_norm_k) and self.k_weight_norm_rpq:
+        if effective_branch_mode != "none" and self.k_weight_norm_rpq:
             if self.k_rpq_permutation is None:
                 q_weight = q.float().square().sum(dim=-2).sqrt()
                 score = k.float().abs() * q_weight[..., None, :]
@@ -771,7 +820,27 @@ class SparseLinearAttention(nn.Module):
             audit_operands("sparse_qk", sparse_q, sparse_k, "q" if effective_q_mode != "none" else "k" if effective_branch_mode != "none" or effective_rubin else None)
         p_audit = None
         fused_reference_sparse_output = None
-        if effective_rubin or self.hif4_only_scope == "rubin":
+        if self.pv_sparsity != "none" and self.pv_hif4:
+            # Fused Triton kernel computes dense QK, applies the selected
+            # structured mask to S before softmax, and quantizes only P/V in
+            # the PV reduction. P_MODE dispatches all supported patterns.
+            o_s = rubin_2to4_attention_forward(
+                sparse_q, sparse_k, v, lut, real_topk, self.BLKQ, self.BLKK,
+                hif4=True, structured_p=True, p_mode=self.pv_sparsity,
+            )
+        elif self.pv_hif4:
+            # Dense P fallback: retain the same block-sparse SLA selection and
+            # HiF4 P/V operands, but do not apply a structured mask to P.
+            o_s = rubin_2to4_attention_forward(
+                sparse_q, sparse_k, v, lut, real_topk, self.BLKQ, self.BLKK,
+                hif4=True, structured_p=False,
+            )
+        elif self.pv_sparsity != "none":
+            o_s, p_audit = explicit_block_sparse_attention_pv_structured(
+                sparse_q, sparse_k, v, lut, self.BLKQ, self.BLKK,
+                mode=self.pv_sparsity, hif4_pv=self.pv_hif4,
+            )
+        elif effective_rubin or self.hif4_only_scope == "rubin":
             if self.rubin_sparse_engine == "fused":
                 _strict_two_of_four(sparse_k, "sparse QK K")
                 fused_result = rubin_2to4_attention_forward(
